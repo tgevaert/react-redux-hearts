@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './css/heartsApp.css';
+import { getPlayers, getCurrentTrick } from './reducers';
+import * as actions from './actions';
 
 const GameTitle = ({title}) => {
   return (
@@ -14,11 +15,18 @@ const GameButton = ({text, onClick}) => {
   );
 };
 
-const Player = ({player}) => <li>{player}</li>;
+const Player = ({player}) => <li>{player.name} - {player.playerType}</li>;
+
+const Card = ({card}) => <li>{card.player} - {card.card}</li>;
+
+const CurrentTrick = ({currentTrick}) => {
+  const cards = currentTrick.map(card => <Card key={card.card} card={card} />);
+  return (<div>{cards}</div>);
+};
 
 const Game = ({players, currentTrick}) => {
 
-  const playerElements = players.map(p => <Player key={p} player={p} />);
+  const playerElements = players.map(p => <Player key={p.name} player={p} />);
 
   return (
       <div>
@@ -28,18 +36,20 @@ const Game = ({players, currentTrick}) => {
           </ul>
         <br />
         <h2>Current Trick:</h2>
-          {currentTrick}
+          <ul>
+            <CurrentTrick currentTrick={currentTrick} />
+          </ul>
       </div>
 
   )
 };
 
-const HeartsApp = () => {
+const HeartsApp = ({store}) => {
   return (
     <div>
       <GameTitle title="HEARTS" />
       <GameButton text="DEAL" onClick={() => console.log("CLICK!")} />
-      <Game players={["West", "North", "East", "Tim"]} currentTrick="" />
+      <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} />
     </div>
   );
 }
