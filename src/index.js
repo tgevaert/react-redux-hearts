@@ -4,16 +4,14 @@ import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 import HeartsApp from './heartsApp';
 import heartsCreateStore from './heartsCreateStore';
+import * as heartsActions from './actions';
 
 const heartsStore = heartsCreateStore();
 const render = () => ReactDOM.render(<HeartsApp store={heartsStore} />, document.getElementById('root'));
 heartsStore.subscribe(render);
-heartsStore.dispatch({type: "ADD_PLAYER", name: "West", playerType: "Ai"});
-heartsStore.dispatch({type: "ADD_PLAYER", name: "North", playerType: "Ai"});
-heartsStore.dispatch({type: "ADD_PLAYER", name: "East", playerType: "Ai"});
-heartsStore.dispatch({type: "ADD_PLAYER", name: "Tim", playerType: "Human"});
-heartsStore.dispatch({type: "PLAY_CARD", player: "Tim", card: "4H"});
-heartsStore.dispatch({type: "PLAY_CARD", player: "West", card: "5H"});
-render();
-
+heartsStore.dispatch(heartsActions.addPlayer({name: "Tim", playerType: "Human"}));
+heartsStore.dispatch(heartsActions.addPlayer({name: "Left", playerType: "Human"}));
+heartsStore.dispatch(heartsActions.addPlayer({name: "Top", playerType: "Human"}));
+heartsStore.dispatch(heartsActions.addPlayer({name: "Right", playerType: "Human"}));
+heartsStore.dispatch(heartsActions.deal());
 registerServiceWorker();

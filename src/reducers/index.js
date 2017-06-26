@@ -15,4 +15,5 @@ const heartsGame = combineReducers({players: heartsPlayers, rules, currentTrick,
 export default heartsGame;
 
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
+export const getPlayerHand = (state, player) => fromHeartsPlayers.getPlayerHand(state.players, player);
 export const getCurrentTrick = (state) => fromCurrentTrick.getCurrentTrick(state.currentTrick);

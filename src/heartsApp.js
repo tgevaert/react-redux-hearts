@@ -15,12 +15,30 @@ const GameButton = ({text, onClick}) => {
   );
 };
 
-const Player = ({player}) => <li>{player.name} - {player.playerType}</li>;
+const PlayerHand = ({cards}) => {
+  const cardElements = cards.map(card => <Card key={card} card={card} />)
+  return (
+      <ul>
+      {cardElements}
+      </ul>
+  );
+}
 
-const Card = ({card}) => <li>{card.player} - {card.card}</li>;
+const Player = ({player}) => {
+  
+  return (
+    <div>
+      <li>{player.name} - {player.playerType}</li>
+      <br />
+      <PlayerHand cards={player.playerHand} />
+    </div>
+  )
+}
+
+const Card = ({card}) => <li>{card}</li>;
 
 const CurrentTrick = ({currentTrick}) => {
-  const cards = currentTrick.map(card => <Card key={card.card} card={card} />);
+  const cards = currentTrick.map(trick => <Card key={trick.card} card={trick.card} />);
   return (<div>{cards}</div>);
 };
 
@@ -44,11 +62,24 @@ const Game = ({players, currentTrick}) => {
   )
 };
 
+const AddPlayer = ({dispatch}) => {
+  let playerName = null;
+
+  return (
+      <div>
+        <input type="text" ref={(input) => {playerName = input;}} />
+        <button onClick={() => dispatch(actions.addPlayer({name: playerName.value}))}>Add Player</button>
+        <br />
+      </div>
+  );
+}
+
 const HeartsApp = ({store}) => {
   return (
     <div>
       <GameTitle title="HEARTS" />
       <GameButton text="DEAL" onClick={() => console.log("CLICK!")} />
+      <AddPlayer dispatch={store.dispatch} />
       <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} />
     </div>
   );
