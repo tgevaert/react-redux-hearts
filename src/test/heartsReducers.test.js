@@ -1,7 +1,8 @@
 import heartsReducer, * as fromHeartsReducer from '../reducers';
+import * as actions from '../actions';
 
 it('Adds a player', () => {
-  const state = {}
+  const state = {};
   const action = {
     type: "ADD_PLAYER",
     name: "Bob",
@@ -12,7 +13,7 @@ it('Adds a player', () => {
 });
 
 it('Adds 4 players', () => {
-  let state = {}
+  let state = {};
   const action = {
     type: "ADD_PLAYER",
     name: "Bob",
@@ -31,25 +32,41 @@ it('Adds 4 players', () => {
 });
 
 it('Deals a card', () => {
-  let state = {}
-  const addPlayerAction = {
-    type: "ADD_PLAYER",
-    name: "Bob",
-    playerType: "Human"
-  };
-
-  state = heartsReducer(state, addPlayerAction);
-
+  let state = {};
+  // Add Bob
+  state = heartsReducer(state, actions.addPlayer({name: "Bob", playerType: "Human"}));
+  // Deal Card
   const dealCardAction = {
     type: "DEAL_CARD",
     player: "Bob",
     card: "AH"
   }
-
   state = heartsReducer(state, dealCardAction);
-  console.log(state);
 
   expect(fromHeartsReducer.getPlayerHand(state, "Bob")).toEqual(["AH"]);
+});
+
+it('Plays a card', () => {
+  let state = {};
+  state = heartsReducer(state, actions.addPlayer({name: "Bob", playerType: "Human"}));
+  // Deal Card
+  const dealCardAction = {
+    type: "DEAL_CARD",
+    player: "Bob",
+    card: "AH"
+  };
+
+  state = heartsReducer(state, dealCardAction);
+
+  const playCardAction = {
+    type: "PLAY_CARD",
+    player: "Bob",
+    card: "AH"
+  };
+
+  state = heartsReducer(state, playCardAction);
+
+  expect(fromHeartsReducer.getPlayerHand(state, "Bob")).toEqual([]);
 });
 
   

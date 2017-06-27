@@ -9,3 +9,9 @@ export const dealCard = (player, card) => ({
   player: player,
   card: card
 });
+
+export const playCard = (player, card) => ({
+  type: "PLAY_CARD",
+  player: player,
+  card: card
+});

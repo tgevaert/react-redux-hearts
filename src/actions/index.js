@@ -2,6 +2,8 @@ import * as fromPlayers from './players';
 import { getPlayers } from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
+export const playCard = (player, card) => fromPlayers.playCard(player, card);
+
 export const deal = () => {
   return (dispatch, getState) => {
     const suits = ["C", "D", "S", "H"];

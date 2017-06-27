@@ -1,6 +1,7 @@
 import React from 'react';
+import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
-import { getPlayers, getCurrentTrick } from './reducers';
+import { getPlayers, getCurrentTrick, getPlayerHand } from './reducers';
 import * as actions from './actions';
 
 const GameTitle = ({title}) => {
@@ -15,8 +16,8 @@ const GameButton = ({text, onClick}) => {
   );
 };
 
-const PlayerHand = ({cards}) => {
-  const cardElements = cards.map(card => <Card key={card} card={card} />)
+const PlayerHand = ({player, cards, playCard}) => {
+  const cardElements = cards.map(card => <Card key={card} onClickHandler={() => playCard(player.name, card)} card={card} />)
   return (
       <ul>
       {cardElements}
@@ -24,18 +25,26 @@ const PlayerHand = ({cards}) => {
   );
 }
 
+const mapStateToPlayerHandProps = (state, { player }) => {
+  const playerHand = getPlayerHand(state, player.name);
+
+  return {player, cards: playerHand}
+};
+
+const PlayerHandContainer = connect(mapStateToPlayerHandProps, {playCard: actions.playCard})(PlayerHand);
+
 const Player = ({player}) => {
   
   return (
     <div>
       <li>{player.name} - {player.playerType}</li>
       <br />
-      <PlayerHand cards={player.playerHand} />
+      <PlayerHandContainer player={player} />
     </div>
   )
 }
 
-const Card = ({card}) => <li>{card}</li>;
+const Card = ({card, onClickHandler}) => <li onClick={onClickHandler}>{card}</li>;
 
 const CurrentTrick = ({currentTrick}) => {
   const cards = currentTrick.map(trick => <Card key={trick.card} card={trick.card} />);
@@ -76,12 +85,14 @@ const AddPlayer = ({dispatch}) => {
 
 const HeartsApp = ({store}) => {
   return (
-    <div>
-      <GameTitle title="HEARTS" />
-      <GameButton text="DEAL" onClick={() => console.log("CLICK!")} />
-      <AddPlayer dispatch={store.dispatch} />
-      <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} />
-    </div>
+      <Provider store={store}>
+        <div>
+          <GameTitle title="HEARTS" />
+          <GameButton text="DEAL" onClick={() => console.log("CLICK!")} />
+          <AddPlayer dispatch={store.dispatch} />
+          <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} />
+      </div>
+      </Provider>
   );
 }
 
