@@ -1,7 +1,7 @@
-export const addPlayer = (player) => ({
+export const addPlayer = (name, playerType = "Human") => ({
   type: "ADD_PLAYER",
-  name: player.name,
-  playerType: player.playerType || "Human"
+  name: name,
+  playerType: playerType
 });
 
 export const dealCard = (player, card) => ({

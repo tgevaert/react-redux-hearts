@@ -34,7 +34,7 @@ it('Adds 4 players', () => {
 it('Deals a card', () => {
   let state = {};
   // Add Bob
-  state = heartsReducer(state, actions.addPlayer({name: "Bob", playerType: "Human"}));
+  state = heartsReducer(state, actions.addPlayer("Bob"));
   // Deal Card
   const dealCardAction = {
     type: "DEAL_CARD",
@@ -48,7 +48,7 @@ it('Deals a card', () => {
 
 it('Plays a card', () => {
   let state = {};
-  state = heartsReducer(state, actions.addPlayer({name: "Bob", playerType: "Human"}));
+  state = heartsReducer(state, actions.addPlayer("Bob"));
   // Deal Card
   const dealCardAction = {
     type: "DEAL_CARD",

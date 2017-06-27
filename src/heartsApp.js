@@ -71,25 +71,27 @@ const Game = ({players, currentTrick}) => {
   )
 };
 
-const AddPlayer = ({dispatch}) => {
+let AddPlayer = ({addPlayer}) => {
   let playerName = null;
 
   return (
       <div>
         <input type="text" ref={(input) => {playerName = input;}} />
-        <button onClick={() => dispatch(actions.addPlayer({name: playerName.value}))}>Add Player</button>
+        <button onClick={() => addPlayer(playerName.value)}>Add Player</button>
         <br />
       </div>
   );
 }
+
+AddPlayer = connect(null, {addPlayer: actions.addPlayer})(AddPlayer);
 
 const HeartsApp = ({store}) => {
   return (
       <Provider store={store}>
         <div>
           <GameTitle title="HEARTS" />
-          <GameButton text="DEAL" onClick={() => console.log("CLICK!")} />
-          <AddPlayer dispatch={store.dispatch} />
+          <AddPlayer />
+          <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
           <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} />
       </div>
       </Provider>

@@ -1,19 +1,12 @@
 import { combineReducers } from 'redux';
 import heartsPlayers, * as fromHeartsPlayers from './heartsPlayers';
-import currentTrick, * as fromCurrentTrick from './currentTrick';
+import heartsTricks, * as fromHeartsTricks from './heartsTricks';
 
-const currentPlayer = (state = "", action) => {
-  return state;
-};
-
-const rules = (state = {}, action) => {
-  return state;
-};
-
-const heartsGame = combineReducers({players: heartsPlayers, rules, currentTrick, currentPlayer});
+const heartsGame = combineReducers({players: heartsPlayers, tricks: heartsTricks});
 
 export default heartsGame;
 
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
 export const getPlayerHand = (state, player) => fromHeartsPlayers.getPlayerHand(state.players, player);
-export const getCurrentTrick = (state) => fromCurrentTrick.getCurrentTrick(state.currentTrick);
+export const getCurrentTrick = (state) => fromHeartsTricks.getCurrentTrick(state.tricks);
+//export const getCurrentPlayer = (state) => state.currentPlayer;
