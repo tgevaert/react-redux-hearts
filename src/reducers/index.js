@@ -8,8 +8,9 @@ export const getCurrentPlayer = (state) => {
     // No players yet
     return null;
   }
-  // If an empty trick, get the previous trick's winner.
+
   const currentTrick = getCurrentTrick(state);
+  // If an empty trick, get the previous trick's winner.
   if (!currentTrick.length) {
     const previousTrick = getPreviousTrick(state);
     if (!previousTrick.length) {

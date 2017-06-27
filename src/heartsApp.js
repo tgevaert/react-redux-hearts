@@ -53,7 +53,7 @@ const CurrentTrick = ({currentTrick}) => {
           </div>);
 };
 
-const Game = ({players, currentTrick, currentWinner}) => {
+const Game = ({players, currentTrick, currentWinner, currentPlayer}) => {
 
   const playerElements = players.map(p => <Player key={p.name} player={p} />);
 
@@ -71,7 +71,7 @@ const Game = ({players, currentTrick, currentWinner}) => {
         <h2>Currently Winning:</h2>
           {currentWinner ? currentWinner : "Nobody"}
         <h2>Waiting for:</h2>
-          {currentWinner ? currentWinner : "Nobody"}
+          {currentPlayer ? currentPlayer : "Nobody"}
       </div>
 
   )
