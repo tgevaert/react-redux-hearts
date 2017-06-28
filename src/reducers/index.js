@@ -35,4 +35,3 @@ export const getPlayerHand = (state, player) => fromHeartsPlayers.getPlayerHand(
 export const getCurrentTrick = (state) => fromHeartsTricks.getCurrentTrick(state.tricks);
 export const getPreviousTrick = (state) => fromHeartsTricks.getPreviousTrick(state.tricks);
 export const getCurrentWinner = (state) => fromHeartsTricks.getCurrentWinner(state.tricks);
-//export const getCurrentPlayer = (state) => state.currentPlayer;
