@@ -1,4 +1,4 @@
-import { constants } from '../heartsRules';
+import { constants as heartsConstants } from '../heartsRules';
 
 export const getCurrentTrick = (state) => state[0];
 export const getPreviousTrick = (state) => {
@@ -45,7 +45,7 @@ export const getTrickWinner = (trick) => {
   for (let c = 0; c < trick.length; c++) {
     let {card, player} = trick[c];
     if (suit === getCardSuit(card) &&
-        constants.cardValues[card.value].rank > constants.cardValues[winningCard.value].rank) {
+        heartsConstants.cardValues[card.value].rank > heartsConstants.cardValues[winningCard.value].rank) {
       winningCard = card;
       winningPlayer = player;
     }
@@ -60,5 +60,7 @@ export const getCurrentWinner = (state) => {
   }
   return getTrickWinner(currentTrick);
 }
+
+export const getTrickPointValue = (trick) => trick.reduce((acc, move) => acc + heartsConstants.pointValue(move.card), 0);
 
 export default heartsTricks;

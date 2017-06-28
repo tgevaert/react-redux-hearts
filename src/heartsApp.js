@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
-import { getPlayers, getCurrentTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer } from './reducers';
+import { getPlayers, getCurrentTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer, getCurrentTrickPointValue } from './reducers';
 import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
 
@@ -59,7 +59,7 @@ const CurrentTrick = ({currentTrick}) => {
           </div>);
 };
 
-const Game = ({players, currentTrick, currentWinner, currentPlayer}) => {
+const Game = ({players, currentTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
 
   const playerElements = players.map(p => <Player key={p.name} player={p} />);
 
@@ -74,6 +74,8 @@ const Game = ({players, currentTrick, currentWinner, currentPlayer}) => {
           <ul>
             <CurrentTrick currentTrick={currentTrick} />
           </ul>
+        <h2>Current Trick Point Value:</h2>
+          {currentTrickPointValue}
         <h2>Currently Winning:</h2>
           {currentWinner ? currentWinner : "Nobody"}
         <h2>Waiting for:</h2>
@@ -104,7 +106,7 @@ const HeartsApp = ({store}) => {
           <GameTitle title="HEARTS" />
           <AddPlayer />
           <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
-          <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} currentWinner={getCurrentWinner(store.getState())} currentPlayer={getCurrentPlayer(store.getState())} />
+          <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} currentTrickPointValue={getCurrentTrickPointValue(store.getState())} currentWinner={getCurrentWinner(store.getState())} currentPlayer={getCurrentPlayer(store.getState())} />
       </div>
       </Provider>
   );

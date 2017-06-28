@@ -44,4 +44,14 @@ export const constants = {
     "K" : {"name": "King", "symbol": "K", "rank": 12},
     "A" : {"name": "Ace", "symbol": "A", "rank": 13} 
   }, 
+
+  pointValue: (card) => {
+    if (card.suit === "H") {
+      return 1;
+    } else if (card.suit === "S" && card.value === "Q") {
+      return 13;
+    } else {
+      return 0;
+    }
+  }
 };

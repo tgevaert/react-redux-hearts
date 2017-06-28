@@ -1,5 +1,6 @@
 import heartsReducer, * as fromHeartsReducer from '../reducers';
 import * as actions from '../actions';
+import * as fromPlayerActions from '../actions/players';
 
 it('Adds a player', () => {
   const state = {};
@@ -8,7 +9,7 @@ it('Adds a player', () => {
     name: "Bob",
     playerType: "Human"
   };
-  const nextState = heartsReducer(state,action);
+  const nextState = heartsReducer(state, action);
   expect(nextState.players).toEqual([{name: 'Bob', playerType: 'Human', playerHand: []}]);
 });
 
@@ -36,38 +37,40 @@ it('Deals a card', () => {
   // Add Bob
   state = heartsReducer(state, actions.addPlayer("Bob"));
   // Deal Card
-  const dealCardAction = {
-    type: "DEAL_CARD",
-    player: "Bob",
-    card: "AH"
+  const card = {
+    value: "A",
+    suit: "H"
   }
-  state = heartsReducer(state, dealCardAction);
+  state = heartsReducer(state, fromPlayerActions.dealCard("Bob", card));
 
-  expect(fromHeartsReducer.getPlayerHand(state, "Bob")).toEqual(["AH"]);
+  expect(fromHeartsReducer.getPlayerHand(state, "Bob")).toEqual([card]);
 });
 
 it('Plays a card', () => {
   let state = {};
   state = heartsReducer(state, actions.addPlayer("Bob"));
   // Deal Card
-  const dealCardAction = {
-    type: "DEAL_CARD",
-    player: "Bob",
-    card: "AH"
-  };
+  const card = {
+    value: "A",
+    suit: "H"
+  }
 
-  state = heartsReducer(state, dealCardAction);
+  state = heartsReducer(state, fromPlayerActions.dealCard("Bob", card));
 
-  const playCardAction = {
-    type: "PLAY_CARD",
-    player: "Bob",
-    card: "AH"
-  };
-
-  state = heartsReducer(state, playCardAction);
+  state = heartsReducer(state, fromPlayerActions.playCard("Bob", card));
 
   expect(fromHeartsReducer.getPlayerHand(state, "Bob")).toEqual([]);
+  expect(fromHeartsReducer.getCurrentTrick(state)).toEqual([{card: card, player: "Bob"}]);
 });
 
-  
-
+it('Calculates a trick value', () => {
+  let state = {};
+  const card = {
+    value: "A",
+    suit: "H"
+  }
+  state = heartsReducer(state, actions.addPlayer("Bob"));
+  state = heartsReducer(state, fromPlayerActions.dealCard("Bob", card));
+  state = heartsReducer(state, fromPlayerActions.playCard("Bob", card));
+  expect(fromHeartsReducer.getCurrentTrickPointValue(state)).toEqual(1);
+});
