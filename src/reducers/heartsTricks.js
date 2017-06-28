@@ -30,7 +30,7 @@ const heartsTricks = (state = [[]], action) => {
 };
 
 const getCardSuit = (card) => {
-  return card[1];
+  return card.suit;
 }
 
 export const getTrickSuit = (trick) => {
@@ -45,7 +45,7 @@ export const getTrickWinner = (trick) => {
   for (let c = 0; c < trick.length; c++) {
     let {card, player} = trick[c];
     if (suit === getCardSuit(card) &&
-        constants.cardValues[card[0]].rank > constants.cardValues[winningCard[0]].rank) {
+        constants.cardValues[card.value].rank > constants.cardValues[winningCard.value].rank) {
       winningCard = card;
       winningPlayer = player;
     }

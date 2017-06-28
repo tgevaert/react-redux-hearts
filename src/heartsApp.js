@@ -2,6 +2,7 @@ import React from 'react';
 import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
 import { getPlayers, getCurrentTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer } from './reducers';
+import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
 
 const GameTitle = ({title}) => {
@@ -17,7 +18,7 @@ const GameButton = ({text, onClick}) => {
 };
 
 const PlayerHand = ({player, cards, playCard}) => {
-  const cardElements = cards.map(card => <Card key={card} onClickHandler={() => playCard(player.name, card)} card={card} />)
+  const cardElements = cards.map(card => <Card key={card.value + card.suit} onClickHandler={() => playCard(player.name, card)} card={card} />)
   return (
       <ul>
       {cardElements}
@@ -44,10 +45,15 @@ const Player = ({player}) => {
   )
 }
 
-const Card = ({card, onClickHandler}) => <li onClick={onClickHandler}>{card}</li>;
+const Card = ({card, onClickHandler}) => {
+  let {value, suit} = card;
+  return (
+    <span onClick={onClickHandler}>{value}{heartsConstants.cardSuits[suit].symbol}</span>
+  )
+}
 
 const CurrentTrick = ({currentTrick}) => {
-  const cards = currentTrick.map(trick => <Card key={trick.card} card={trick.card} />);
+  const cards = currentTrick.map(trick => <Card key={trick.card.value + trick.card.suit} card={trick.card} />);
   return (<div>
           {cards}
           </div>);

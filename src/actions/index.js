@@ -3,6 +3,7 @@ import * as fromTricks from './tricks';
 import { getPlayers, getCurrentPlayer, getCurrentTrick } from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
+
 export const playCard = (player, card) => {
   return (dispatch, getState) => {
     if (getCurrentPlayer(getState()) === player) {
@@ -25,7 +26,7 @@ export const deal = () => {
 
     for (let s = 0; s < suits.length; s++) {
       for (let v = 0; v < values.length; v++) {
-        let card = values[v] + suits[s];
+        let card = { value: values[v], suit: suits[s] }
         let index = s*values.length + v
         dispatch(fromPlayers.dealCard(players[index % players.length].name, card));
       }
