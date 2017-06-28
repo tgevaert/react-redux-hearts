@@ -1,11 +1,18 @@
 import * as fromPlayers from './players';
-import { getPlayers, getCurrentPlayer } from '../reducers';
+import * as fromTricks from './tricks';
+import { getPlayers, getCurrentPlayer, getCurrentTrick } from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
 export const playCard = (player, card) => {
   return (dispatch, getState) => {
     if (getCurrentPlayer(getState()) === player) {
       dispatch(fromPlayers.playCard(player, card));
+      const newState = getState();
+      const players = getPlayers(newState);
+      const currentTrick = getCurrentTrick(newState);
+      if (players.length === currentTrick.length) {
+        dispatch(fromTricks.newTrick());
+      }
     }
   }
 }

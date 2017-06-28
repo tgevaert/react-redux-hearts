@@ -1,3 +1,3 @@
-export const concludeTrick = () => ({
-  type: "CONCLUDE_TRICK",
+export const newTrick = () => ({
+  type: "NEW_TRICK",
 });
