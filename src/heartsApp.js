@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
-import { getPlayers, getCurrentTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer, getCurrentTrickPointValue } from './reducers';
+import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer, getCurrentTrickPointValue } from './reducers';
 import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
 
@@ -48,7 +48,7 @@ const Player = ({player}) => {
 const Card = ({card, onClickHandler}) => {
   let {value, suit} = card;
   return (
-    <span onClick={onClickHandler}>{value}{heartsConstants.cardSuits[suit].symbol}</span>
+    <span onClick={onClickHandler} style={{color: heartsConstants.cardSuits[suit].colour}}>{value}{heartsConstants.cardSuits[suit].symbol}</span>
   )
 }
 
@@ -59,7 +59,7 @@ const CurrentTrick = ({currentTrick}) => {
           </div>);
 };
 
-const Game = ({players, currentTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
+const Game = ({players, currentTrick, previousTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
 
   const playerElements = players.map(p => <Player key={p.name} player={p} />);
 
@@ -71,9 +71,9 @@ const Game = ({players, currentTrick, currentWinner, currentPlayer, currentTrick
           </ul>
         <br />
         <h2>Current Trick:</h2>
-          <ul>
-            <CurrentTrick currentTrick={currentTrick} />
-          </ul>
+          <CurrentTrick currentTrick={currentTrick} />
+        <h2>Previous Trick:</h2>
+          <CurrentTrick currentTrick={previousTrick} />
         <h2>Current Trick Point Value:</h2>
           {currentTrickPointValue}
         <h2>Currently Winning:</h2>
@@ -106,7 +106,7 @@ const HeartsApp = ({store}) => {
           <GameTitle title="HEARTS" />
           <AddPlayer />
           <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
-          <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} currentTrickPointValue={getCurrentTrickPointValue(store.getState())} currentWinner={getCurrentWinner(store.getState())} currentPlayer={getCurrentPlayer(store.getState())} />
+          <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} previousTrick={getPreviousTrick(store.getState())} currentTrickPointValue={getCurrentTrickPointValue(store.getState())} currentWinner={getCurrentWinner(store.getState())} currentPlayer={getCurrentPlayer(store.getState())} />
       </div>
       </Provider>
   );
