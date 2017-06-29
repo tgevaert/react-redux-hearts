@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
-import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer, getCurrentTrickPointValue } from './reducers';
+import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer, getCurrentTrickPointValue, getRoundTrickHistory } from './reducers';
 import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
 
@@ -52,12 +52,24 @@ const Card = ({card, onClickHandler}) => {
   )
 }
 
-const CurrentTrick = ({currentTrick}) => {
-  const cards = currentTrick.map(trick => <Card key={trick.card.value + trick.card.suit} card={trick.card} />);
+const Trick = ({trick}) => {
+  const cards = trick.map(move => <Card key={move.card.value + move.card.suit} card={move.card} />);
   return (<div>
           {cards}
           </div>);
 };
+
+const TrickHistory = ({tricks = []}) => {
+  let trickElements = tricks.map(trick => <li><Trick trick={trick} /></li>);
+
+  return (<ul>
+          {trickElements}
+          </ul>);
+}
+
+const mapStateToTrickHistoryProps = (state) => ({tricks: getRoundTrickHistory(state)});
+
+const TrickHistoryContainer = connect(mapStateToTrickHistoryProps)(TrickHistory);
 
 const Game = ({players, currentTrick, previousTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
 
@@ -71,15 +83,17 @@ const Game = ({players, currentTrick, previousTrick, currentWinner, currentPlaye
           </ul>
         <br />
         <h2>Current Trick:</h2>
-          <CurrentTrick currentTrick={currentTrick} />
+          <Trick trick={currentTrick} />
         <h2>Previous Trick:</h2>
-          <CurrentTrick currentTrick={previousTrick} />
+          <Trick trick={previousTrick} />
         <h2>Current Trick Point Value:</h2>
           {currentTrickPointValue}
         <h2>Currently Winning:</h2>
           {currentWinner ? currentWinner : "Nobody"}
         <h2>Waiting for:</h2>
           {currentPlayer ? currentPlayer : "Nobody"}
+        <h2>Trick History:</h2>
+        <TrickHistoryContainer />
       </div>
 
   )

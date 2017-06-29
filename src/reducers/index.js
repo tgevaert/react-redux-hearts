@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import heartsPlayers, * as fromHeartsPlayers from './heartsPlayers';
 import heartsRounds, * as fromHeartsRounds from './heartsRounds';
-import heartsTricks, * as fromHeartsTricks from './heartsTricks';
+import * as fromHeartsTricks from './heartsTricks';
 
 export const getCurrentPlayer = (state) => {
   let players = getPlayers(state);
@@ -39,6 +39,7 @@ export const getPlayerHand = (state, player) => fromHeartsPlayers.getPlayerHand(
 export const getCurrentTrick = (state) => fromHeartsRounds.getCurrentTrick(state.rounds);
 export const getPreviousTrick = (state) => fromHeartsRounds.getPreviousTrick(state.rounds);
 export const getCurrentWinner = (state) => fromHeartsRounds.getCurrentWinner(state.rounds);
+export const getRoundTrickHistory = (state) => fromHeartsRounds.getRoundTrickHistory(state.rounds);
 
 // Trick selectors
 export const getCurrentTrickPointValue = (state) => fromHeartsTricks.getTrickPointValue(getCurrentTrick(state)); 
