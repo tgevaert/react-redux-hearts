@@ -16,6 +16,8 @@ export const emptyHand = {
 
 export const emptyTrick = [];
 
+export const emptyRound = {tricks: [[]]};
+
 export const cardAH = {
   value: "A",
   suit: "H"
@@ -25,6 +27,22 @@ export const cardAC = {
   value: "A",
   suit: "C"
 };
+
+export const cardKC = {
+  value: "K",
+  suit: "C"
+};
+
+export const card3C = {
+  value: "3",
+  suit: "C"
+};
+
+export const card2C = {
+  value: "3",
+  suit: "C"
+};
+
 
 
 

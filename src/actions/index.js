@@ -1,6 +1,6 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
-import { getPlayers, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit} from '../reducers';
+import { getPlayers, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken } from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
 
@@ -9,19 +9,22 @@ const isValidMove = (state, player, card) => {
   if (!playerHandContainsCard(state, player, card)) {
     return false;
   }
+
   // Suit to follow
   const suit = getCurrentTrickSuit(state);
-  if (card.suit === suit) {
-    // Following suit
-    return true;
-  }
+
   if (suit === null) {
     // Player has the lead
-
     // Check if hearts broken
+    if (card.suit === "H" && !isHeartsBroken(state)) {
+      // Need to check if only hearts left in hand
+      return false
+    }
     return true;
   }
-  if (!playerHandContainsSuit(state, player, suit)) {
+
+  if (card.suit === suit || !playerHandContainsSuit(state, player, suit) ) {
+    // Following suit or Can't follow suit
     return true;
   }
   return false;

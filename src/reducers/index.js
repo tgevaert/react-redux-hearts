@@ -43,6 +43,7 @@ export const getCurrentTrickSuit = (state) => fromHeartsRounds.getCurrentTrickSu
 export const getPreviousTrick = (state) => fromHeartsRounds.getPreviousTrick(state.rounds);
 export const getCurrentWinner = (state) => fromHeartsRounds.getCurrentWinner(state.rounds);
 export const getRoundTrickHistory = (state) => fromHeartsRounds.getRoundTrickHistory(state.rounds);
+export const isHeartsBroken = (state) => fromHeartsRounds.isHeartsBroken(state.rounds);
 
 // Trick selectors
 export const getCurrentTrickPointValue = (state) => fromHeartsTricks.getTrickPointValue(getCurrentTrick(state)); 
