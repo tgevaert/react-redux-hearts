@@ -30,7 +30,7 @@ const heartsPlayer = (state = {}, action) => {
     default:
       return state;
   }
-}
+};
 
 const heartsPlayers = (state = [], action) => {
   let nextState = null;
@@ -57,4 +57,20 @@ export const getPlayers = (state) => state;
 export const getPlayerHand = (state, playerName) => {
   const player = getPlayer(state, playerName);
   return player.playerHand;
+};
+
+export const playerHandContainsCard = (state, playerName, card) => {
+  const playerHand = getPlayerHand(state, playerName);
+  const idx = playerHand.indexOf(card);
+  return idx > -1;
+};
+
+export const playerHandContainsSuit = (state, playerName, suit) => {
+  const playerHand = getPlayerHand(state, playerName);
+  for (let card of playerHand) {
+    if (card.suit === suit) {
+      return true;
+    }
+  }
+  return false;
 };

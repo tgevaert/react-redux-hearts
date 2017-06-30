@@ -1,16 +1,6 @@
 import { constants as heartsConstants } from '../heartsRules';
 
-export const getCurrentTrick = (state) => state[0];
-export const getPreviousTrick = (state) => {
-  if (state.length > 1) {
-    return state[1];
-  } else {
-    return [];
-  }
-};
-
-export const getCompletedTricks = (state) => state.slice(1);
-export const getLastMove = (trick) => trick[trick.length-1];
+// Reducer
 
 const heartsTricks = (state = [[]], action) => {
   switch (action.type) {
@@ -29,11 +19,29 @@ const heartsTricks = (state = [[]], action) => {
   }
 };
 
+
+// Selectors
+
+export const getCurrentTrick = (state) => state[0];
+export const getPreviousTrick = (state) => {
+  if (state.length > 1) {
+    return state[1];
+  } else {
+    return [];
+  }
+};
+
+export const getCompletedTricks = (state) => state.slice(1);
+export const getLastMove = (trick) => trick[trick.length-1];
+
 const getCardSuit = (card) => {
   return card.suit;
 }
 
 export const getTrickSuit = (trick) => {
+  if (!trick.length) {
+    return null;
+  }
   return getCardSuit(trick[0].card);
 }
 

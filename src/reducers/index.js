@@ -34,9 +34,12 @@ export default heartsGame;
 // Player selectors
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
 export const getPlayerHand = (state, player) => fromHeartsPlayers.getPlayerHand(state.players, player);
+export const playerHandContainsCard = (state, player, card) => fromHeartsPlayers.playerHandContainsCard(state.players, player, card)
+export const playerHandContainsSuit = (state, player, suit) => fromHeartsPlayers.playerHandContainsSuit(state.players, player, suit)
 
 // Round selectors
 export const getCurrentTrick = (state) => fromHeartsRounds.getCurrentTrick(state.rounds);
+export const getCurrentTrickSuit = (state) => fromHeartsRounds.getCurrentTrickSuit(state.rounds);
 export const getPreviousTrick = (state) => fromHeartsRounds.getPreviousTrick(state.rounds);
 export const getCurrentWinner = (state) => fromHeartsRounds.getCurrentWinner(state.rounds);
 export const getRoundTrickHistory = (state) => fromHeartsRounds.getRoundTrickHistory(state.rounds);

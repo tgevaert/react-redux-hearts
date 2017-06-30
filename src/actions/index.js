@@ -1,12 +1,36 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
-import { getPlayers, getCurrentPlayer, getCurrentTrick } from '../reducers';
+import { getPlayers, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit} from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
 
+const isValidMove = (state, player, card) => {
+  // Does Player possess card
+  if (!playerHandContainsCard(state, player, card)) {
+    return false;
+  }
+  // Suit to follow
+  const suit = getCurrentTrickSuit(state);
+  if (card.suit === suit) {
+    // Following suit
+    return true;
+  }
+  if (suit === null) {
+    // Player has the lead
+
+    // Check if hearts broken
+    return true;
+  }
+  if (!playerHandContainsSuit(state, player, suit)) {
+    return true;
+  }
+  return false;
+}
+
 export const playCard = (player, card) => {
   return (dispatch, getState) => {
-    if (getCurrentPlayer(getState()) === player) {
+    const state = getState();
+    if (getCurrentPlayer(state) === player && isValidMove(state, player, card)) {
       dispatch(fromPlayers.playCard(player, card));
       const newState = getState();
       const players = getPlayers(newState);

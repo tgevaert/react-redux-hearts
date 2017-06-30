@@ -1,4 +1,30 @@
-import { getTrickPointValue } from '../reducers/heartsTricks'
+import heartsTricks, * as fromHeartsTricks from '../reducers/heartsTricks'
+import * as testConstants from './testConstants';
+
+it("Handles a dummy action.", () => {
+  expect(heartsTricks(undefined, testConstants.dummyAction)).toEqual([[]]);
+});
+
+it("Gets Trick Suit", () => {
+  const trick = [{
+    player: "Bob",
+    card: {
+      value: "2",
+      suit: "H"
+    }
+  }, {
+    player: "Doug",
+    card: {
+      value: "3",
+      suit: "H"
+    }
+  }]
+  expect(fromHeartsTricks.getTrickSuit(trick)).toEqual("H");
+});
+
+it("Handles Empty Trick Suit", () => {
+  expect(fromHeartsTricks.getTrickSuit([])).toEqual(null);
+});
 
 it("Calculates Hearts Trick Values", () => {
   const trick = [{
@@ -15,7 +41,7 @@ it("Calculates Hearts Trick Values", () => {
     }
   }]
 
-  expect(getTrickPointValue(trick)).toEqual(2);
+  expect(fromHeartsTricks.getTrickPointValue(trick)).toEqual(2);
 });
 
 it("Calculates Clean Trick Values", () => {
@@ -33,7 +59,7 @@ it("Calculates Clean Trick Values", () => {
     }
   }]
 
-  expect(getTrickPointValue(trick)).toEqual(0);
+  expect(fromHeartsTricks.getTrickPointValue(trick)).toEqual(0);
 });
 
 it("Calculates Queen Trick Values", () => {
@@ -51,5 +77,5 @@ it("Calculates Queen Trick Values", () => {
     }
   }]
 
-  expect(getTrickPointValue(trick)).toEqual(13);
+  expect(fromHeartsTricks.getTrickPointValue(trick)).toEqual(13);
 });
