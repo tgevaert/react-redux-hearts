@@ -31,6 +31,17 @@ const heartsGame = combineReducers({players: heartsPlayers, rounds: heartsRounds
 
 export default heartsGame;
 
+export const isRoundComplete = (state) => {
+  let playerHand = [];
+  for (let player of getPlayers(state)) {
+    playerHand = getPlayerHand(state, player.name);
+    if (playerHand.length > 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
 // Player selectors
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
 export const getPlayerHand = (state, player) => fromHeartsPlayers.getPlayerHand(state.players, player);

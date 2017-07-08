@@ -1,6 +1,7 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
-import { getPlayers, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken } from '../reducers';
+import * as fromRounds from './rounds';
+import { getPlayers, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete } from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
 
@@ -30,17 +31,52 @@ const isValidMove = (state, player, card) => {
   return false;
 }
 
+const isTrickComplete = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const players = getPlayers(state);
+    const currentTrick = getCurrentTrick(state);
+    if (players.length === currentTrick.length) {
+      dispatch(fromTricks.newTrick());
+      return Promise.resolve("Trick Complete!");
+    }
+    return Promise.reject("Trick Not Complete");
+  }
+}
+
+const isRoundCompleted = () => {
+  return (dispatch, getState) => {
+    if (isRoundComplete(getState())) {
+      dispatch(fromRounds.newRound());
+      return Promise.resolve("Round Complete!");
+    }
+    return Promise.reject("Round is not complete!");
+  }
+}
+
+const isGameComplete = () => {
+  return (dispatch, getState) => {
+    console.log("isGameComplete?");
+    return Promise.reject("Game is not complete!");
+  }
+}
+
 export const playCard = (player, card) => {
+  // Eventually the control loop will be:
+  // Select Cards
+  // Pass Cards
+  // Play Card
+  // Complete Trick
+  // Complete Round
+  // Complete Game
   return (dispatch, getState) => {
     const state = getState();
     if (getCurrentPlayer(state) === player && isValidMove(state, player, card)) {
       dispatch(fromPlayers.playCard(player, card));
-      const newState = getState();
-      const players = getPlayers(newState);
-      const currentTrick = getCurrentTrick(newState);
-      if (players.length === currentTrick.length) {
-        dispatch(fromTricks.newTrick());
-      }
+      dispatch(isTrickComplete())
+        .then(() => dispatch(isRoundCompleted()))
+        .then(() => dispatch(isGameComplete()))
+        .catch((error) => console.log(error));
     }
   }
 }

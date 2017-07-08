@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
+import { Table, Well, Grid, Row, PageHeader, Jumbotron } from 'react-bootstrap';
 import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer, getCurrentTrickPointValue, getRoundTrickHistory } from './reducers';
 import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
 
 const GameTitle = ({title}) => {
   return (
-    <h1>{title}</h1>
+    <PageHeader>{title}</PageHeader>
   );
 }
 
@@ -48,7 +49,7 @@ const Player = ({player}) => {
 const Card = ({card, onClickHandler}) => {
   let {value, suit} = card;
   return (
-    <span onClick={onClickHandler} style={{color: heartsConstants.cardSuits[suit].colour}}>{value}{heartsConstants.cardSuits[suit].symbol}</span>
+    <div className="card" onClick={onClickHandler} style={{color: heartsConstants.cardSuits[suit].colour}}>{value}{" "}{heartsConstants.cardSuits[suit].symbol}</div>
   )
 }
 
@@ -60,7 +61,7 @@ const Trick = ({trick}) => {
 };
 
 const TrickHistory = ({tricks = []}) => {
-  let trickElements = tricks.map(trick => <li><Trick trick={trick} /></li>);
+  let trickElements = tricks.map(trick => <li key={trick.reduce((acc, move) => acc + move.card.value + move.card.suit)}><Trick trick={trick} /></li>);
 
   return (<ul>
           {trickElements}
@@ -71,6 +72,49 @@ const mapStateToTrickHistoryProps = (state) => ({tricks: getRoundTrickHistory(st
 
 const TrickHistoryContainer = connect(mapStateToTrickHistoryProps)(TrickHistory);
 
+const ScoreTable = ({players, scores}) => {
+  const sum = [...players].fill(0);
+  for (let score of scores){
+    for (let s = 0; s < score.length; s++) {
+      sum[s] += score[s];
+    }
+  }
+  const tableHeading = players.map(p => <th key={p} className={"col-md-3"}>{p}</th>);
+  const tableRows = scores.map(scoreRow => <tr>{scoreRow.map(score => <td className={"col-md-3"}>{score}</td>)}</tr>)
+
+  return (
+      <Table>
+        <thead>
+          <tr>
+            {tableHeading}
+          </tr>
+        </thead>
+        <tbody>
+          {tableRows}
+        </tbody>
+        <thead>
+          <tr>
+            {sum.map((s) => <th>{s}</th>)}
+          </tr>
+        </thead>
+
+      </Table>
+      )
+  
+  
+}
+
+const mapStateToScoreProps = (getState) => (
+    {
+      players: ["Bob", "Doug", "Bill", "Ted"],
+      scores: [
+        [0, 5, 5, 16],
+        [0, 5, 5, 16]
+      ]
+});
+
+const ScoreContainer = connect(mapStateToScoreProps)(ScoreTable);
+
 const Game = ({players, currentTrick, previousTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
 
   const playerElements = players.map(p => <Player key={p.name} player={p} />);
@@ -78,9 +122,11 @@ const Game = ({players, currentTrick, previousTrick, currentWinner, currentPlaye
   return (
       <div>
         <h2>Players:</h2>
-          <ul>
-            {playerElements}
-          </ul>
+          <Well bsSize="small">
+            <ul>
+              {playerElements}
+            </ul>
+          </Well>
         <br />
         <h2>Current Trick:</h2>
           <Trick trick={currentTrick} />
@@ -94,6 +140,8 @@ const Game = ({players, currentTrick, previousTrick, currentWinner, currentPlaye
           {currentPlayer ? currentPlayer : "Nobody"}
         <h2>Trick History:</h2>
         <TrickHistoryContainer />
+        <h2>Scores:</h2>
+        <ScoreContainer />
       </div>
 
   )
@@ -116,12 +164,18 @@ AddPlayer = connect(null, {addPlayer: actions.addPlayer})(AddPlayer);
 const HeartsApp = ({store}) => {
   return (
       <Provider store={store}>
-        <div>
-          <GameTitle title="HEARTS" />
-          <AddPlayer />
-          <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
-          <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} previousTrick={getPreviousTrick(store.getState())} currentTrickPointValue={getCurrentTrickPointValue(store.getState())} currentWinner={getCurrentWinner(store.getState())} currentPlayer={getCurrentPlayer(store.getState())} />
-      </div>
+        <Grid>
+          <Row>
+            <GameTitle title="Hearts" />
+          </Row>
+          <Row>
+          <Jumbotron>
+            <AddPlayer />
+            <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
+            <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} previousTrick={getPreviousTrick(store.getState())} currentTrickPointValue={getCurrentTrickPointValue(store.getState())} currentWinner={getCurrentWinner(store.getState())} currentPlayer={getCurrentPlayer(store.getState())} />
+          </Jumbotron>
+          </Row>
+        </Grid>
       </Provider>
   );
 }
