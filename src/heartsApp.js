@@ -21,9 +21,9 @@ const GameButton = ({text, onClick}) => {
 const PlayerHand = ({player, cards, playCard}) => {
   const cardElements = cards.map(card => <Card key={card.value + card.suit} onClickHandler={() => playCard(player.name, card)} card={card} />)
   return (
-      <ul>
-      {cardElements}
-      </ul>
+      <div className="hand">
+        {cardElements}
+      </div>
   );
 }
 
@@ -46,16 +46,20 @@ const Player = ({player}) => {
   )
 }
 
-const Card = ({card, onClickHandler}) => {
-  let {value, suit} = card;
+const Card = ({card, onClickHandler, direction}) => {
+  const {value, suit} = card;
+  const className = "card" + (direction !== undefined ? " " + direction : "");
+  
   return (
-    <div className="card" onClick={onClickHandler} style={{color: heartsConstants.cardSuits[suit].colour}}>{value}{" "}{heartsConstants.cardSuits[suit].symbol}</div>
+    <div className={className} onClick={onClickHandler} style={{color: heartsConstants.cardSuits[suit].colour}}>{value}{" "}{heartsConstants.cardSuits[suit].symbol}</div>
   )
 }
 
 const Trick = ({trick}) => {
-  const cards = trick.map(move => <Card key={move.card.value + move.card.suit} card={move.card} />);
-  return (<div>
+  const direction = ["north", "east", "south", "west"];
+  let d = 0;
+  const cards = trick.map(move => <Card key={move.card.value + move.card.suit} direction={direction[d++]} card={move.card} />);
+  return (<div className="trick">
           {cards}
           </div>);
 };

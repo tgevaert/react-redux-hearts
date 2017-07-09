@@ -19,11 +19,48 @@ td, th {
   cursor: pointer;
   text-align: center;
   display: inline-block;
-  margin-left: -0.2em;
-  padding-left: 0.2em;
-  width: 1.9em;
-  height: auto;
+  width: 1.8em;
+  height: 2.929em;
   border: 1px solid black;
   border-radius: 5px 10px;
   background: white;
+}
+
+.hand .card {
+  margin-left: -0.1em;
+  padding-left: 0.1em;
+}
+
+.trick {
+  position: relative;
+  height: 12em;
+  width: 12em;
+}
+
+.trick .card {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.trick .card.north {
+  top: -2.5em;
+}
+
+.trick .card.east {
+  right: -2.5em;
+}
+
+.trick .card.south {
+  bottom: -2.5em;
+}
+
+.trick .card.west {
+  left: -2.5em;
 }
