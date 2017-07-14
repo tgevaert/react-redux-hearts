@@ -2,7 +2,7 @@ import React from 'react';
 import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
 import { Table, Well, Grid, Row, PageHeader, Jumbotron } from 'react-bootstrap';
-import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayer, getCurrentTrickPointValue, getRoundTrickHistory } from './reducers';
+import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayerID, getCurrentTrickPointValue, getRoundTrickHistory, getScores } from './reducers';
 import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
 
@@ -19,7 +19,7 @@ const GameButton = ({text, onClick}) => {
 };
 
 const PlayerHand = ({player, cards, playCard}) => {
-  const cardElements = cards.map(card => <Card key={card.value + card.suit} onClickHandler={() => playCard(player.name, card)} card={card} />)
+  const cardElements = cards.map(card => <Card key={card.value + card.suit} onClickHandler={() => playCard(player.id, card)} card={card} />)
   return (
       <div className="hand">
         {cardElements}
@@ -28,17 +28,18 @@ const PlayerHand = ({player, cards, playCard}) => {
 }
 
 const mapStateToPlayerHandProps = (state, { player }) => {
-  const playerHand = getPlayerHand(state, player.name);
+  const playerHand = getPlayerHand(state, player.id);
 
   return {player, cards: playerHand}
 };
 
 const PlayerHandContainer = connect(mapStateToPlayerHandProps, {playCard: actions.playCard})(PlayerHand);
 
-const Player = ({player}) => {
+const Player = ({player, isCurrentPlayer}) => {
+  const className = "player" + (isCurrentPlayer ? " player-current" : "");
   
   return (
-    <div>
+    <div className={className}>
       <li>{player.name} - {player.playerType}</li>
       <br />
       <PlayerHandContainer player={player} />
@@ -108,44 +109,59 @@ const ScoreTable = ({players, scores}) => {
   
 }
 
-const mapStateToScoreProps = (getState) => (
+const mapStateToScoreProps = (state) => (
     {
-      players: ["Bob", "Doug", "Bill", "Ted"],
-      scores: [
-        [0, 5, 5, 16],
-        [0, 5, 5, 16]
-      ]
+      players: getPlayers(state),
+      scores: getScores(state)
 });
 
 const ScoreContainer = connect(mapStateToScoreProps)(ScoreTable);
 
-const Game = ({players, currentTrick, previousTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
+const Players = ({players, currentPlayerID}) => {
+  const playerElements = players.map(p => <Player isCurrentPlayer={p.id === currentPlayerID} key={p.id} player={p} />);
 
-  const playerElements = players.map(p => <Player key={p.name} player={p} />);
+  return (
+    <div>
+      <h2>Players:</h2>
+      <Well bsSize="small">
+        <ul>
+          {playerElements}
+        </ul>
+      </Well>
+    </div>
+  );
+}
+
+const mapStateToPlayersProps = (state) => ({
+  players: getPlayers(state),
+  currentPlayerID: getCurrentPlayerID(state)
+});
+
+const PlayersContainer = connect(mapStateToPlayersProps, null)(Players);
+const CurrentTrickContainer = connect(state => ({trick: getCurrentTrick(state)}), null)(Trick);
+const PreviousTrickContainer = connect(state => ({trick: getPreviousTrick(state)}), null)(Trick);
+
+const Game = ({currentTrick, previousTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
+  //let scoreContainer = <ScoreContainer />;
+  let scoreContainer = (<h4>TODO: SCORE</h4>);
+
 
   return (
       <div>
-        <h2>Players:</h2>
-          <Well bsSize="small">
-            <ul>
-              {playerElements}
-            </ul>
-          </Well>
+        <PlayersContainer />
         <br />
         <h2>Current Trick:</h2>
-          <Trick trick={currentTrick} />
+        <CurrentTrickContainer />
         <h2>Previous Trick:</h2>
-          <Trick trick={previousTrick} />
+        <PreviousTrickContainer />
         <h2>Current Trick Point Value:</h2>
           {currentTrickPointValue}
         <h2>Currently Winning:</h2>
           {currentWinner ? currentWinner : "Nobody"}
-        <h2>Waiting for:</h2>
-          {currentPlayer ? currentPlayer : "Nobody"}
         <h2>Trick History:</h2>
         <TrickHistoryContainer />
         <h2>Scores:</h2>
-        <ScoreContainer />
+        {scoreContainer}
       </div>
 
   )
@@ -166,6 +182,7 @@ let AddPlayer = ({addPlayer}) => {
 AddPlayer = connect(null, {addPlayer: actions.addPlayer})(AddPlayer);
 
 const HeartsApp = ({store}) => {
+  const state = store.getState();
   return (
       <Provider store={store}>
         <Grid>
@@ -176,7 +193,8 @@ const HeartsApp = ({store}) => {
           <Jumbotron>
             <AddPlayer />
             <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
-            <Game players={getPlayers(store.getState())} currentTrick={getCurrentTrick(store.getState())} previousTrick={getPreviousTrick(store.getState())} currentTrickPointValue={getCurrentTrickPointValue(store.getState())} currentWinner={getCurrentWinner(store.getState())} currentPlayer={getCurrentPlayer(store.getState())} />
+            <Game currentTrickPointValue={getCurrentTrickPointValue(state)} 
+                  currentWinner={getCurrentWinner(state)} />
           </Jumbotron>
           </Row>
         </Grid>

@@ -1,66 +1,53 @@
+import * as testConstants from './testConstants';
 import heartsReducer, * as fromHeartsReducer from '../reducers';
 import * as actions from '../actions';
 import * as fromPlayerActions from '../actions/players';
 
+
 it('Adds a player', () => {
   const state = {};
-  const action = {
-    type: "ADD_PLAYER",
-    name: "Bob",
-    playerType: "Human"
-  };
-  const nextState = heartsReducer(state, action);
-  expect(nextState.players).toEqual([{name: 'Bob', playerType: 'Human', playerHand: []}]);
+  const nextState = heartsReducer(state, testConstants.addPlayerBob);
+  expect(nextState.players).toEqual([testConstants.playerBob]);
 });
 
 it('Adds 4 players', () => {
   let state = {};
-  const action = {
-    type: "ADD_PLAYER",
-    name: "Bob",
-    playerType: "Human"
-  };
-  state = heartsReducer(state, action);
-  state = heartsReducer(state, action);
-  state = heartsReducer(state, action);
-  state = heartsReducer(state, action);
+  state = heartsReducer(state, testConstants.addPlayerBob);
+  state = heartsReducer(state, testConstants.addPlayerDoug);
+  state = heartsReducer(state, testConstants.addPlayerBill);
+  state = heartsReducer(state, testConstants.addPlayerTed);
   expect(state.players).toEqual([
-      {name: 'Bob', playerType: 'Human', playerHand: []},
-      {name: 'Bob', playerType: 'Human', playerHand: []},
-      {name: 'Bob', playerType: 'Human', playerHand: []},
-      {name: 'Bob', playerType: 'Human', playerHand: []},
+      testConstants.playerBob, 
+      testConstants.playerDoug,
+      testConstants.playerBill,
+      testConstants.playerTed
   ]);
 });
 
 it('Deals a card', () => {
   let state = {};
   // Add Bob
-  state = heartsReducer(state, actions.addPlayer("Bob"));
+  state = heartsReducer(state, testConstants.addPlayerBob);
   // Deal Card
-  const card = {
-    value: "A",
-    suit: "H"
-  }
-  state = heartsReducer(state, fromPlayerActions.dealCard("Bob", card));
-
-  expect(fromHeartsReducer.getPlayerHand(state, "Bob")).toEqual([card]);
+  state = heartsReducer(state, fromPlayerActions.dealCard(testConstants.playerBob.id, testConstants.cardAH));
+  expect(fromHeartsReducer.getPlayerHand(state, testConstants.playerBob.id)).toEqual([testConstants.cardAH]);
 });
 
 it('Plays a card', () => {
   let state = {};
-  state = heartsReducer(state, actions.addPlayer("Bob"));
+  state = heartsReducer(state, testConstants.addPlayerBob);
   // Deal Card
   const card = {
     value: "A",
     suit: "H"
   }
 
-  state = heartsReducer(state, fromPlayerActions.dealCard("Bob", card));
+  state = heartsReducer(state, fromPlayerActions.dealCard(testConstants.playerBob.id, card));
 
-  state = heartsReducer(state, fromPlayerActions.playCard("Bob", card));
+  state = heartsReducer(state, fromPlayerActions.playCard(testConstants.playerBob.id, card));
 
-  expect(fromHeartsReducer.getPlayerHand(state, "Bob")).toEqual([]);
-  expect(fromHeartsReducer.getCurrentTrick(state)).toEqual([{card: card, player: "Bob"}]);
+  expect(fromHeartsReducer.getPlayerHand(state, testConstants.playerBob.id)).toEqual([]);
+  expect(fromHeartsReducer.getCurrentTrick(state)).toEqual([{card: card, playerID: testConstants.playerBob.id}]);
 });
 
 it('Calculates a trick value', () => {

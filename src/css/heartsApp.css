@@ -13,6 +13,10 @@ td, th {
   text-align: right;
 }
 
+ .player-current {
+  background: grey;
+}
+
 .card {
   font-size: 2em;
   font-family: monospace;

@@ -1,13 +1,13 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
-import { getPlayers, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete } from '../reducers';
+import { getPlayers, getCurrentPlayerID, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete } from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
 
-const isValidMove = (state, player, card) => {
+const isValidMove = (state, playerID, card) => {
   // Does Player possess card
-  if (!playerHandContainsCard(state, player, card)) {
+  if (!playerHandContainsCard(state, playerID, card)) {
     return false;
   }
 
@@ -24,7 +24,7 @@ const isValidMove = (state, player, card) => {
     return true;
   }
 
-  if (card.suit === suit || !playerHandContainsSuit(state, player, suit) ) {
+  if (card.suit === suit || !playerHandContainsSuit(state, playerID, suit) ) {
     // Following suit or Can't follow suit
     return true;
   }
@@ -61,7 +61,7 @@ const isGameComplete = () => {
   }
 }
 
-export const playCard = (player, card) => {
+export const playCard = (playerID, card) => {
   // Eventually the control loop will be:
   // Select Cards
   // Pass Cards
@@ -71,8 +71,8 @@ export const playCard = (player, card) => {
   // Complete Game
   return (dispatch, getState) => {
     const state = getState();
-    if (getCurrentPlayer(state) === player && isValidMove(state, player, card)) {
-      dispatch(fromPlayers.playCard(player, card));
+    if (getCurrentPlayerID(state) === playerID && isValidMove(state, playerID, card)) {
+      dispatch(fromPlayers.playCard(playerID, card));
       dispatch(isTrickComplete())
         .then(() => dispatch(isRoundCompleted()))
         .then(() => dispatch(isGameComplete()))
@@ -91,7 +91,7 @@ export const deal = () => {
       for (let v = 0; v < values.length; v++) {
         let card = { value: values[v], suit: suits[s] }
         let index = s*values.length + v
-        dispatch(fromPlayers.dealCard(players[index % players.length].name, card));
+        dispatch(fromPlayers.dealCard(players[index % players.length].id, card));
       }
     }
   }

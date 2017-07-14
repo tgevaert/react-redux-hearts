@@ -35,4 +35,18 @@ it('Reports if hearts are not broken', () => {
   expect(fromHeartsRounds.isHeartsBroken(state)).toEqual(true);
 });
 
+it('Calculates scores', () => {
+  let state = undefined;
+  const players = [
+    testConstants.playerBob,
+    testConstants.playerDoug,
+    testConstants.playerBill,
+    testConstants.playerTed,
+  ];
 
+  state = heartsRounds(state, Object.assign({}, playCardAction, {player: testConstants.playerBob.name, card: testConstants.cardAH}))
+  state = heartsRounds(state, Object.assign({}, playCardAction, {player: testConstants.playerDoug.name, card: testConstants.cardAC}))
+  state = heartsRounds(state, Object.assign({}, playCardAction, {player: testConstants.playerBill.name, card: testConstants.card3C}))
+  state = heartsRounds(state, Object.assign({}, playCardAction, {player: testConstants.playerTed.name, card: testConstants.card2C}))
+  expect(fromHeartsRounds.getScores(state, players)).toEqual([[1, 0, 0, 0]]);
+})

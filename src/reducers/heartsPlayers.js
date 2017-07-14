@@ -18,11 +18,16 @@ const heartsPlayer = (state = {}, action) => {
   let nextState = null;
   switch(action.type) {
     case "ADD_PLAYER":
-      nextState = {name: action.name, playerType: action.playerType, playerHand: playerHand([], action)}
+      nextState = {
+        id: action.id, 
+        name: action.name, 
+        playerType: action.playerType, 
+        playerHand: playerHand([], action)
+      }
       return nextState;
     case "DEAL_CARD":
     case "PLAY_CARD":
-      if (state.name !== action.player) {
+      if (state.id !== action.playerID) {
         return state
       }
       nextState = Object.assign({}, state, {playerHand: playerHand(state.playerHand, action)});
@@ -47,26 +52,27 @@ const heartsPlayers = (state = [], action) => {
   }
 }
 
-const getPlayer = (state, playerName) => {
-  return state.find(player => player.name === playerName);
+const getPlayer = (state, playerID) => {
+  return state.find(player => player.id === playerID);
 }
 
 export default heartsPlayers;
 
 export const getPlayers = (state) => state;
-export const getPlayerHand = (state, playerName) => {
-  const player = getPlayer(state, playerName);
+export const getPlayerIDs = (state) => state.map(player => player.id);
+export const getPlayerHand = (state, playerID) => {
+  const player = getPlayer(state, playerID);
   return player.playerHand;
 };
 
-export const playerHandContainsCard = (state, playerName, card) => {
-  const playerHand = getPlayerHand(state, playerName);
+export const playerHandContainsCard = (state, playerID, card) => {
+  const playerHand = getPlayerHand(state, playerID);
   const idx = playerHand.indexOf(card);
   return idx > -1;
 };
 
-export const playerHandContainsSuit = (state, playerName, suit) => {
-  const playerHand = getPlayerHand(state, playerName);
+export const playerHandContainsSuit = (state, playerID, suit) => {
+  const playerHand = getPlayerHand(state, playerID);
   for (let card of playerHand) {
     if (card.suit === suit) {
       return true;

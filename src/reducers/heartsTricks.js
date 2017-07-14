@@ -8,7 +8,7 @@ const heartsTricks = (state = [[]], action) => {
       const currentTrick = getCurrentTrick(state);
       const newTrick = [...currentTrick, {
         card: action.card, 
-        player: action.player
+        playerID: action.playerID
       }];
       const nextState = [newTrick, ...state.slice(1)];
       return nextState;
@@ -46,19 +46,19 @@ export const getTrickSuit = (trick) => {
 }
 
 export const getTrickWinner = (trick) => {
-  let winningPlayer = null, winningCard = null;
+  let winningPlayerID = null, winningCard = null;
   winningCard = trick[0].card;
-  winningPlayer = trick[0].player;
+  winningPlayerID = trick[0].playerID;
   const suit = getTrickSuit(trick);
   for (let c = 0; c < trick.length; c++) {
-    let {card, player} = trick[c];
+    let {card, playerID} = trick[c];
     if (suit === getCardSuit(card) &&
         heartsConstants.cardValues[card.value].rank > heartsConstants.cardValues[winningCard.value].rank) {
       winningCard = card;
-      winningPlayer = player;
+      winningPlayerID = playerID;
     }
   }
-  return winningPlayer;
+  return winningPlayerID;
 }
 
 export const getCurrentWinner = (state) => {

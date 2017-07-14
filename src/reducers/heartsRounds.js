@@ -28,7 +28,25 @@ export const isHeartsBroken = (state) => {
     }
   }
   return false;
-}
+};
+
+export const getScores = (state, playerIDs) => {
+  const scores = [];
+  let trickPoints = 0;
+  let trickWinner = null;
+  for (let round of state) {
+    const roundScores = [...playerIDs].fill(0);
+    for (let trick of round.tricks) {
+      trickPoints = fromHeartsTricks.getTrickPointValue(trick);
+      if (trickPoints > 0) {
+        trickWinner = fromHeartsTricks.getTrickWinner(trick);
+        roundScores[playerIDs.indexOf(trickWinner)] += trickPoints;
+      }
+    }
+    scores.push(roundScores);
+  }
+  return scores;
+};
 
 export const getCurrentTrick = (state) => fromHeartsTricks.getCurrentTrick(state[0].tricks);
 export const getCurrentTrickSuit = (state) => fromHeartsTricks.getTrickSuit(getCurrentTrick(state));
