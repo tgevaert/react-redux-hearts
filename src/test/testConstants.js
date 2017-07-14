@@ -84,6 +84,8 @@ export const card2C = {
   suit: "C"
 };
 
-
-
+export const cardQS = {
+  value: "Q",
+  suit: "S"
+};
 

@@ -84,8 +84,8 @@ const ScoreTable = ({players, scores}) => {
       sum[s] += score[s];
     }
   }
-  const tableHeading = players.map(p => <th key={p} className={"col-md-3"}>{p}</th>);
-  const tableRows = scores.map(scoreRow => <tr>{scoreRow.map(score => <td className={"col-md-3"}>{score}</td>)}</tr>)
+  const tableHeading = players.map(p => <th key={p.id} className={"col-md-3"}>{p.name}</th>);
+  const tableRows = scores.map(scoreRow => <tr key={scores.indexOf(scoreRow)}>{scoreRow.map(score => <td className={"col-md-3"}>{score}</td>)}</tr>)
 
   return (
       <Table>
@@ -142,8 +142,8 @@ const CurrentTrickContainer = connect(state => ({trick: getCurrentTrick(state)})
 const PreviousTrickContainer = connect(state => ({trick: getPreviousTrick(state)}), null)(Trick);
 
 const Game = ({currentTrick, previousTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
-  //let scoreContainer = <ScoreContainer />;
-  let scoreContainer = (<h4>TODO: SCORE</h4>);
+  let scoreContainer = <ScoreContainer />;
+  //let scoreContainer = (<h4>TODO: SCORE</h4>);
 
 
   return (

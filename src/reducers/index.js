@@ -33,8 +33,8 @@ export default heartsGame;
 
 export const isRoundComplete = (state) => {
   let playerHand = [];
-  for (let player of getPlayers(state)) {
-    playerHand = getPlayerHand(state, player.name);
+  for (let playerID of getPlayerIDs(state)) {
+    playerHand = getPlayerHand(state, playerID);
     if (playerHand.length > 0) {
       return false;
     }
