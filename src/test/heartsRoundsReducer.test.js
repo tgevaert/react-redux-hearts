@@ -1,5 +1,6 @@
 import heartsRounds, * as fromHeartsRounds from '../reducers/heartsRounds';
 import * as testConstants from './testConstants';
+import deepFreeze from 'deep-freeze';
 
 const newRoundAction = {type: "NEW_ROUND"};
 
@@ -15,12 +16,29 @@ it('Creates a new round', () => {
   expect(heartsRounds(undefined, newRoundAction)).toEqual([testConstants.emptyRound]);
 });
 
+it('Has no side-effects', () => {
+  const initialState = heartsRounds(undefined, newRoundAction);
+  let state = heartsRounds(initialState, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardAC}));
+  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardKC}));
+  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card3C}));
+  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card2C}));
+  state = heartsRounds(state, newTrickAction);
+  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardAH}));
+  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardQH}));
+  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card3H}));
+  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card2H}));
+  state = heartsRounds(state, newRoundAction);
+
+  deepFreeze(state);
+  fromHeartsRounds.isHeartsBroken(state);
+  fromHeartsRounds.getScores(state, [1, 2, 3, 4]);
+});
+
 it('Reports if hearts are not broken', () => {
   let state = undefined;
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardAC}))
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardKC}))
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card3C}))
-  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card2C}))
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card2C}))
   state = heartsRounds(state, newTrickAction);
   expect(fromHeartsRounds.isHeartsBroken(state)).toEqual(false);
@@ -31,7 +49,6 @@ it('Reports if hearts are not broken', () => {
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardAH}))
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.cardKC}))
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card3C}))
-  state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card2C}))
   state = heartsRounds(state, Object.assign({}, playCardAction, {playerID: testConstants.playerBob.id, card: testConstants.card2C}))
   state = heartsRounds(state, newTrickAction);
   expect(fromHeartsRounds.isHeartsBroken(state)).toEqual(true);

@@ -34,7 +34,8 @@ export const getScores = (state, playerIDs) => {
   const scores = [];
   let trickPoints = 0;
   let trickWinner = null;
-  for (let round of state.reverse()) {
+  for (let r = state.length - 1; r >= 0; r--) {
+    let round = state[r];
     const roundScores = [...playerIDs].fill(0);
     for (let trick of round.tricks) {
       trickPoints = fromHeartsTricks.getTrickPointValue(trick);

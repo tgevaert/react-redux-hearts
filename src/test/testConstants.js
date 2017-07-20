@@ -64,6 +64,21 @@ export const cardAH = {
   suit: "H"
 };
 
+export const card3H = {
+  value: "3",
+  suit: "H"
+};
+
+export const card2H = {
+  value: "2",
+  suit: "H"
+};
+
+export const cardQH = {
+  value: "Q",
+  suit: "H"
+};
+
 export const cardAC = {
   value: "A",
   suit: "C"
