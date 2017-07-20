@@ -1,10 +1,16 @@
 import React from 'react';
 import { connect, Provider } from 'react-redux';
 import './css/heartsApp.css';
-import { Table, Well, Grid, Row, PageHeader, Jumbotron } from 'react-bootstrap';
+import Table from 'react-bootstrap/lib/Table';
+import Well from 'react-bootstrap/lib/Well';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import PageHeader from 'react-bootstrap/lib/PageHeader';
+import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayerID, getCurrentTrickPointValue, getRoundTrickHistory, getScores } from './reducers';
 import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
+//import HeartsAppDevTools from './heartsAppDevTools'
 
 const GameTitle = ({title}) => {
   return (
@@ -143,8 +149,6 @@ const PreviousTrickContainer = connect(state => ({trick: getPreviousTrick(state)
 
 const Game = ({currentTrick, previousTrick, currentWinner, currentPlayer, currentTrickPointValue}) => {
   let scoreContainer = <ScoreContainer />;
-  //let scoreContainer = (<h4>TODO: SCORE</h4>);
-
 
   return (
       <div>
@@ -182,22 +186,25 @@ let AddPlayer = ({addPlayer}) => {
 AddPlayer = connect(null, {addPlayer: actions.addPlayer})(AddPlayer);
 
 const HeartsApp = ({store}) => {
+//          <HeartsAppDevTools />
   const state = store.getState();
   return (
       <Provider store={store}>
-        <Grid>
-          <Row>
-            <GameTitle title="Hearts" />
-          </Row>
-          <Row>
-          <Jumbotron>
-            <AddPlayer />
-            <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
-            <Game currentTrickPointValue={getCurrentTrickPointValue(state)} 
-                  currentWinner={getCurrentWinner(state)} />
-          </Jumbotron>
-          </Row>
-        </Grid>
+        <div>
+          <Grid>
+            <Row>
+              <GameTitle title="Hearts" />
+            </Row>
+            <Row>
+            <Jumbotron>
+              <AddPlayer />
+              <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
+              <Game currentTrickPointValue={getCurrentTrickPointValue(state)} 
+                    currentWinner={getCurrentWinner(state)} />
+            </Jumbotron>
+            </Row>
+          </Grid>
+        </div>
       </Provider>
   );
 }
