@@ -1,1 +1,2 @@
-export const newRound = () => ({type: "NEW_ROUND"});
+import { NEW_ROUND } from '../reducers/heartsRounds';
+export const newRound = () => ({type: NEW_ROUND});

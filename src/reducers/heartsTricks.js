@@ -1,10 +1,15 @@
 import { constants as heartsConstants } from '../heartsRules';
+import * as fromHeartsPlayers from './heartsPlayers';
+
+// Action Types
+
+export const NEW_TRICK = "NEW_TRICK";
 
 // Reducer
 
 const heartsTricks = (state = [[]], action) => {
   switch (action.type) {
-    case "PLAY_CARD":
+    case fromHeartsPlayers.PLAY_CARD:
       const currentTrick = getCurrentTrick(state);
       const newTrick = [...currentTrick, {
         card: action.card, 
@@ -12,7 +17,7 @@ const heartsTricks = (state = [[]], action) => {
       }];
       const nextState = [newTrick, ...state.slice(1)];
       return nextState;
-    case "NEW_TRICK":
+    case NEW_TRICK:
       return [[], ...state];
     default:
       return state;

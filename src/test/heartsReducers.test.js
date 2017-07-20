@@ -1,6 +1,5 @@
 import * as testConstants from './testConstants';
 import heartsReducer, * as fromHeartsReducer from '../reducers';
-import * as actions from '../actions';
 import * as fromPlayerActions from '../actions/players';
 
 
@@ -37,27 +36,19 @@ it('Plays a card', () => {
   let state = {};
   state = heartsReducer(state, testConstants.addPlayerBob);
   // Deal Card
-  const card = {
-    value: "A",
-    suit: "H"
-  }
+  state = heartsReducer(state, fromPlayerActions.dealCard(testConstants.playerBob.id, testConstants.cardAH));
 
-  state = heartsReducer(state, fromPlayerActions.dealCard(testConstants.playerBob.id, card));
-
-  state = heartsReducer(state, fromPlayerActions.playCard(testConstants.playerBob.id, card));
+  // Play Card
+  state = heartsReducer(state, fromPlayerActions.playCard(testConstants.playerBob.id, testConstants.cardAH));
 
   expect(fromHeartsReducer.getPlayerHand(state, testConstants.playerBob.id)).toEqual([]);
-  expect(fromHeartsReducer.getCurrentTrick(state)).toEqual([{card: card, playerID: testConstants.playerBob.id}]);
+  expect(fromHeartsReducer.getCurrentTrick(state)).toEqual([{card: testConstants.cardAH, playerID: testConstants.playerBob.id}]);
 });
 
 it('Calculates a trick value', () => {
   let state = {};
-  const card = {
-    value: "A",
-    suit: "H"
-  }
-  state = heartsReducer(state, actions.addPlayer("Bob"));
-  state = heartsReducer(state, fromPlayerActions.dealCard("Bob", card));
-  state = heartsReducer(state, fromPlayerActions.playCard("Bob", card));
+  state = heartsReducer(state, testConstants.addPlayerBob);
+  state = heartsReducer(state, fromPlayerActions.dealCard(testConstants.playerBob.id, testConstants.cardAH));
+  state = heartsReducer(state, fromPlayerActions.playCard(testConstants.playerBob.id, testConstants.cardAH));
   expect(fromHeartsReducer.getCurrentTrickPointValue(state)).toEqual(1);
 });

@@ -1,8 +1,15 @@
+// Actions
+
+export const ADD_PLAYER = "ADD_PLAYER";
+export const DEAL_CARD = "DEAL_CARD";
+export const PLAY_CARD = "PLAY_CARD";
+
+// Reducers
 const playerHand = (state = [], action) => {
   switch(action.type) {
-    case "DEAL_CARD":
+    case DEAL_CARD:
       return [...state, action.card];
-    case "PLAY_CARD":
+    case PLAY_CARD:
       const idx = state.findIndex(card => card === action.card);
       if (idx > -1) {
         return [].concat(state.slice(0, idx), state.slice(idx+1));
@@ -17,7 +24,7 @@ const playerHand = (state = [], action) => {
 const heartsPlayer = (state = {}, action) => {
   let nextState = null;
   switch(action.type) {
-    case "ADD_PLAYER":
+    case ADD_PLAYER:
       nextState = {
         id: action.id, 
         name: action.name, 
@@ -25,8 +32,8 @@ const heartsPlayer = (state = {}, action) => {
         playerHand: playerHand([], action)
       }
       return nextState;
-    case "DEAL_CARD":
-    case "PLAY_CARD":
+    case DEAL_CARD:
+    case PLAY_CARD:
       if (state.id !== action.playerID) {
         return state
       }
@@ -40,17 +47,19 @@ const heartsPlayer = (state = {}, action) => {
 const heartsPlayers = (state = [], action) => {
   let nextState = null;
   switch (action.type) {
-    case "ADD_PLAYER":
+    case ADD_PLAYER:
       nextState = [...state, heartsPlayer(state, action)];
       return nextState;
-    case "DEAL_CARD":
-    case "PLAY_CARD":
+    case DEAL_CARD:
+    case PLAY_CARD:
       nextState = state.map(player => heartsPlayer(player, action));
       return nextState;
     default:
       return state;
   }
 }
+
+// Selectors
 
 const getPlayer = (state, playerID) => {
   return state.find(player => player.id === playerID);

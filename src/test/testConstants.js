@@ -1,3 +1,4 @@
+import { ADD_PLAYER } from '../reducers/heartsPlayers';
 export const dummyAction = {type: "DUMMY_ACTION"}
 
 export const emptyHand = [];
@@ -17,7 +18,7 @@ export const playerTed = Object.assign({}, player, {id: 4, name: "Ted"});
 
 export const addPlayerBob = Object.assign(
     {}, 
-    { type: "ADD_PLAYER" }, 
+    { type: ADD_PLAYER }, 
     {
       name: playerBob.name,
       id: playerBob.id,
@@ -27,7 +28,7 @@ export const addPlayerBob = Object.assign(
 
 export const addPlayerDoug = Object.assign(
     {}, 
-    { type: "ADD_PLAYER" }, 
+    { type: ADD_PLAYER }, 
     {
       name: playerDoug.name,
       id: playerDoug.id,
@@ -37,7 +38,7 @@ export const addPlayerDoug = Object.assign(
 
 export const addPlayerBill = Object.assign(
     {}, 
-    { type: "ADD_PLAYER" }, 
+    { type: ADD_PLAYER }, 
     {
       name: playerBill.name,
       id: playerBill.id,
@@ -47,7 +48,7 @@ export const addPlayerBill = Object.assign(
 
 export const addPlayerTed = Object.assign(
     {}, 
-    { type: "ADD_PLAYER" }, 
+    { type: ADD_PLAYER }, 
     {
       name: playerTed.name,
       id: playerTed.id,
@@ -103,4 +104,31 @@ export const cardQS = {
   value: "Q",
   suit: "S"
 };
+
+export const heartsTrick = [{
+    playerID: playerBob.id,
+    card: cardAH
+  }, {
+    playerID: playerDoug.id,
+    card: card3H
+  }
+];
+
+export const clubsTrick = [{
+    playerID: playerBob.id,
+    card: cardAC
+  }, {
+    playerID: playerDoug.id,
+    card: cardKC
+  }
+];
+
+export const queenTrick = [{
+    playerID: playerBob.id,
+    card: cardQS
+  }, {
+    playerID: playerDoug.id,
+    card: card3C
+  }
+];
 

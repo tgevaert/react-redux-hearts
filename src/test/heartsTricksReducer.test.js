@@ -1,4 +1,6 @@
+import deepFreeze from 'deep-freeze';
 import heartsTricks, * as fromHeartsTricks from '../reducers/heartsTricks'
+import * as fromHeartsPlayers from '../reducers/heartsPlayers';
 import * as testConstants from './testConstants';
 
 it("Handles a dummy action.", () => {
@@ -6,20 +8,7 @@ it("Handles a dummy action.", () => {
 });
 
 it("Gets Trick Suit", () => {
-  const trick = [{
-    player: "Bob",
-    card: {
-      value: "2",
-      suit: "H"
-    }
-  }, {
-    player: "Doug",
-    card: {
-      value: "3",
-      suit: "H"
-    }
-  }]
-  expect(fromHeartsTricks.getTrickSuit(trick)).toEqual("H");
+  expect(fromHeartsTricks.getTrickSuit(testConstants.clubsTrick)).toEqual("C");
 });
 
 it("Handles Empty Trick Suit", () => {
@@ -27,55 +16,40 @@ it("Handles Empty Trick Suit", () => {
 });
 
 it("Calculates Hearts Trick Values", () => {
-  const trick = [{
-    player: "Bob",
-    card: {
-      value: "2",
-      suit: "H"
-    }
-  }, {
-    player: "Doug",
-    card: {
-      value: "3",
-      suit: "H"
-    }
-  }]
-
-  expect(fromHeartsTricks.getTrickPointValue(trick)).toEqual(2);
+  expect(fromHeartsTricks.getTrickPointValue(testConstants.heartsTrick)).toEqual(2);
 });
 
 it("Calculates Clean Trick Values", () => {
-  const trick = [{
-    player: "Bob",
-    card: {
-      value: "2",
-      suit: "C"
-    }
-  }, {
-    player: "Doug",
-    card: {
-      value: "3",
-      suit: "C"
-    }
-  }]
-
-  expect(fromHeartsTricks.getTrickPointValue(trick)).toEqual(0);
+  expect(fromHeartsTricks.getTrickPointValue(testConstants.clubsTrick)).toEqual(0);
 });
 
 it("Calculates Queen Trick Values", () => {
-  const trick = [{
-    player: "Bob",
-    card: {
-      value: "Q",
-      suit: "S"
-    }
-  }, {
-    player: "Doug",
-    card: {
-      value: "3",
-      suit: "C"
-    }
-  }]
+  expect(fromHeartsTricks.getTrickPointValue(testConstants.queenTrick)).toEqual(13);
+});
 
-  expect(fromHeartsTricks.getTrickPointValue(trick)).toEqual(13);
+it("Has no side effects.", () => {
+  let trick = testConstants.queenTrick;
+  let tricks = [
+    testConstants.queenTrick,
+    testConstants.clubsTrick
+  ];
+  deepFreeze(tricks);
+  // Reducer
+  heartsTricks(tricks, testConstants.dummyAction);
+  heartsTricks(tricks, {type: fromHeartsTricks.NEW_TRICK});
+  heartsTricks(tricks, {
+    type: fromHeartsPlayers.PLAY_CARD, 
+    card: testConstants.cardAH, 
+    playerID: testConstants.playerBob.id});
+  // Tricks Selectors
+  fromHeartsTricks.getCurrentTrick(tricks);
+  fromHeartsTricks.getPreviousTrick(tricks);
+  fromHeartsTricks.getCompletedTricks(tricks);
+  fromHeartsTricks.getCurrentWinner(tricks);
+
+  // Trick Selectors
+  fromHeartsTricks.getLastMove(trick);
+  fromHeartsTricks.getTrickSuit(trick);
+  fromHeartsTricks.getTrickWinner(trick);
+  fromHeartsTricks.getTrickPointValue(trick);
 });

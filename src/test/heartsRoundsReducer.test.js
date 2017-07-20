@@ -1,12 +1,14 @@
 import heartsRounds, * as fromHeartsRounds from '../reducers/heartsRounds';
+import * as fromHeartsTricks from '../reducers/heartsTricks';
+import * as fromHeartsPlayers from '../reducers/heartsPlayers';
 import * as testConstants from './testConstants';
 import deepFreeze from 'deep-freeze';
 
-const newRoundAction = {type: "NEW_ROUND"};
+const newRoundAction = {type: fromHeartsRounds.NEW_ROUND};
 
-const newTrickAction = {type: "NEW_TRICK"};
+const newTrickAction = {type: fromHeartsTricks.NEW_TRICK};
 
-const playCardAction = {type: "PLAY_CARD"};
+const playCardAction = {type: fromHeartsPlayers.PLAY_CARD};
 
 it('Creates initial State', () => {
   expect(heartsRounds(undefined, testConstants.dummyAction)).toEqual([testConstants.emptyRound]);

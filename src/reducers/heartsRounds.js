@@ -1,5 +1,9 @@
 import heartsTricks, * as fromHeartsTricks from './heartsTricks';
 
+// Action Types
+
+export const NEW_ROUND = "NEW_ROUND";
+
 // Reducers
 
 const heartsRound = (state = {}, action) => {
@@ -10,7 +14,7 @@ const heartsRound = (state = {}, action) => {
 
 const heartsRounds = (state = [], action) => {
   switch (action.type) {
-    case "NEW_ROUND":
+    case NEW_ROUND:
       return [heartsRound(undefined, action), ...state]
     default:
       return [].concat(heartsRound(state[0], action), ...state.slice(1))
