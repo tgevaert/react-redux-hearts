@@ -10,7 +10,7 @@ import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import { getPlayers, getCurrentTrick, getPreviousTrick, getPlayerHand, getCurrentWinner, getCurrentPlayerID, getCurrentTrickPointValue, getRoundTrickHistory, getScores } from './reducers';
 import { constants as heartsConstants } from './heartsRules';
 import * as actions from './actions';
-//import HeartsAppDevTools from './heartsAppDevTools'
+import HeartsAppDevTools from './heartsAppDevTools'
 
 const GameTitle = ({title}) => {
   return (
@@ -25,7 +25,7 @@ const GameButton = ({text, onClick}) => {
 };
 
 const PlayerHand = ({player, cards, playCard}) => {
-  const cardElements = cards.map(card => <Card key={card.value + card.suit} onClickHandler={() => playCard(player.id, card)} card={card} />)
+  const cardElements = cards.map(card => <Card key={card.value + card.suit} onClickHandler={() => playCard(player.id, card).then((result) => console.log(result), (error) => console.log("error" + error))} card={card} />)
   return (
       <div className="hand">
         {cardElements}
@@ -186,7 +186,6 @@ let AddPlayer = ({addPlayer}) => {
 AddPlayer = connect(null, {addPlayer: actions.addPlayer})(AddPlayer);
 
 const HeartsApp = ({store}) => {
-//          <HeartsAppDevTools />
   const state = store.getState();
   return (
       <Provider store={store}>
@@ -204,6 +203,7 @@ const HeartsApp = ({store}) => {
             </Jumbotron>
             </Row>
           </Grid>
+          <HeartsAppDevTools />
         </div>
       </Provider>
   );

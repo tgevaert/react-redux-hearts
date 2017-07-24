@@ -1,5 +1,5 @@
 import React from 'react';
-import { render as ReactDOMRender } from 'react-dom/lib/ReactDOM';
+import { render as ReactDOMRender } from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';

@@ -1,7 +1,7 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
-import { getPlayers, getCurrentPlayerID, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete } from '../reducers';
+import { getPlayers, getCurrentPlayerID, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete, isGameComplete } from '../reducers';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
 
@@ -38,9 +38,9 @@ const isTrickComplete = () => {
     const currentTrick = getCurrentTrick(state);
     if (players.length === currentTrick.length) {
       dispatch(fromTricks.newTrick());
-      return Promise.resolve("Trick Complete!");
+      return Promise.reject("Trick Complete!");
     }
-    return Promise.reject("Trick Not Complete");
+    return Promise.resolve("Trick Not Complete");
   }
 }
 
@@ -48,16 +48,16 @@ const isRoundCompleted = () => {
   return (dispatch, getState) => {
     if (isRoundComplete(getState())) {
       dispatch(fromRounds.newRound());
-      return Promise.resolve("Round Complete!");
+      return Promise.reject("Round Complete!");
     }
-    return Promise.reject("Round is not complete!");
+    return Promise.resolve("Round is not complete!");
   }
 }
 
-const isGameComplete = () => {
+const isGameCompleted = () => {
   return (dispatch, getState) => {
     console.log("isGameComplete?");
-    return Promise.reject("Game is not complete!");
+    return Promise.resolve("Game is not complete!");
   }
 }
 
@@ -73,10 +73,13 @@ export const playCard = (playerID, card) => {
     const state = getState();
     if (getCurrentPlayerID(state) === playerID && isValidMove(state, playerID, card)) {
       dispatch(fromPlayers.playCard(playerID, card));
-      dispatch(isTrickComplete())
+      dispatch(isGameCompleted())
         .then(() => dispatch(isRoundCompleted()))
-        .then(() => dispatch(isGameComplete()))
+        .then(() => dispatch(isTrickComplete()))
         .catch((error) => console.log(error));
+      return Promise.resolve("Played Card Success!");
+    } else {
+      return Promise.reject("Invalid Card Played.");
     }
   }
 }

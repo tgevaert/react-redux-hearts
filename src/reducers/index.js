@@ -40,7 +40,12 @@ export const isRoundComplete = (state) => {
     }
   }
   return true;
-}
+};
+
+export const isGameComplete = (state) => {
+  // Check cumulate score for each player.  Return true when scores reach above 100
+  return false;
+};
 
 // Player selectors
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
