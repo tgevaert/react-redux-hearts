@@ -7,9 +7,17 @@ import './card_hand.png';
 import './index.css';
 import HeartsApp from './heartsApp';
 import heartsCreateStore from './heartsCreateStore';
+import * as heartsActions from './actions';
 
 const heartsStore = heartsCreateStore();
 const render = () => ReactDOMRender(<HeartsApp store={heartsStore} />, document.getElementById('root'));
 heartsStore.subscribe(render);
+heartsStore.dispatch(heartsActions.addPlayer("Bob"));
+heartsStore.dispatch(heartsActions.addPlayer("Doug"));
+heartsStore.dispatch(heartsActions.addPlayer("Bill"));
+heartsStore.dispatch(heartsActions.addPlayer("Ted"));
+heartsStore.dispatch(heartsActions.deal());
+//let firstPlayerID = heartsStore.getState().players[0].id;
+//heartsStore.dispatch(heartsActions.playCard(firstPlayerID, {suit: "C", value: "2"}));
 render();
 registerServiceWorker();

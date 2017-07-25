@@ -76,8 +76,12 @@ export const getPlayerHand = (state, playerID) => {
 
 export const playerHandContainsCard = (state, playerID, card) => {
   const playerHand = getPlayerHand(state, playerID);
-  const idx = playerHand.indexOf(card);
-  return idx > -1;
+  for (let c of playerHand) {
+    if (c.suit === card.suit && c.value === card.value) {
+      return true;
+    }
+  }
+  return false;
 };
 
 export const playerHandContainsSuit = (state, playerID, suit) => {

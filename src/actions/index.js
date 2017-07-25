@@ -2,6 +2,7 @@ import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
 import { getPlayers, getCurrentPlayerID, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete, isGameComplete } from '../reducers';
+import { AIplayRandomCard } from '../ai';
 
 export const addPlayer = (player) => fromPlayers.addPlayer(player);
 
@@ -61,6 +62,17 @@ const isGameCompleted = () => {
   }
 }
 
+const computerMove = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const currentPlayerID = getCurrentPlayerID(state);
+    const nextCard = AIplayRandomCard(state, currentPlayerID);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve(dispatch(playCard(currentPlayerID, nextCard))), 1000);
+    });
+  }
+}
+
 export const playCard = (playerID, card) => {
   // Eventually the control loop will be:
   // Select Cards
@@ -76,6 +88,7 @@ export const playCard = (playerID, card) => {
       dispatch(isGameCompleted())
         .then(() => dispatch(isRoundCompleted()))
         .then(() => dispatch(isTrickComplete()))
+        .then(() => dispatch(computerMove()))
         .catch((error) => console.log(error));
       return Promise.resolve("Played Card Success!");
     } else {

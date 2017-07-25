@@ -75,6 +75,11 @@ export const card2H = {
   suit: "H"
 };
 
+export const card4H = {
+  value: "2",
+  suit: "H"
+};
+
 export const cardQH = {
   value: "Q",
   suit: "H"
