@@ -171,20 +171,6 @@ const Game = ({currentTrick, previousTrick, currentWinner, currentPlayer, curren
   )
 };
 
-let AddPlayer = ({addPlayer}) => {
-  let playerName = null;
-
-  return (
-      <div>
-        <input type="text" ref={(input) => {playerName = input;}} />
-        <button onClick={() => addPlayer(playerName.value)}>Add Player</button>
-        <br />
-      </div>
-  );
-}
-
-AddPlayer = connect(null, {addPlayer: actions.addPlayer})(AddPlayer);
-
 const HeartsApp = ({store}) => {
   const state = store.getState();
   return (
@@ -196,7 +182,6 @@ const HeartsApp = ({store}) => {
             </Row>
             <Row>
             <Jumbotron>
-              <AddPlayer />
               <GameButton text="DEAL" onClick={() => store.dispatch(actions.deal())} />
               <Game currentTrickPointValue={getCurrentTrickPointValue(state)} 
                     currentWinner={getCurrentWinner(state)} />

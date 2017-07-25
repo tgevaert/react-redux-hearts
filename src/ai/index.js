@@ -40,7 +40,6 @@ export const AIplayRandomCard = (state, playerID) => {
   const hand = getPlayerHand(state, playerID);
   const suit = getCurrentTrickSuit(state);
   const followSuit = playerHandContainsSuit(state, playerID, suit);
-  console.log("Follow Suit: " + followSuit);
 
   let cardPool = [];
 
