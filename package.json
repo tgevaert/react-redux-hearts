@@ -25,7 +25,7 @@
   "scripts": {
     "build-css": "lessc src/bootstrap.less --include-path=./node_modules/bootstrap/less src/css/heartsBootstrap.css",
     "start": "react-scripts start",
-    "build": "build-css && react-scripts build",
+    "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "analyze": "source-map-explorer build/static/js/main.*"

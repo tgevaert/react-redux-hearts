@@ -4,7 +4,13 @@ import * as fromRounds from './rounds';
 import { getPlayers, getCurrentPlayerID, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete, isGameComplete } from '../reducers';
 import { AIplayRandomCard } from '../ai';
 
-export const addPlayer = (player) => fromPlayers.addPlayer(player);
+export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
+
+const delayedDispatch = (delay, dispatch) => {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(dispatch()), delay);
+  });
+}
 
 const isValidMove = (state, playerID, card) => {
   // Does Player possess card
@@ -38,8 +44,8 @@ const isTrickComplete = () => {
     const players = getPlayers(state);
     const currentTrick = getCurrentTrick(state);
     if (players.length === currentTrick.length) {
-      dispatch(fromTricks.newTrick());
-      return Promise.reject("Trick Complete!");
+      return delayedDispatch(1000, () => dispatch(fromTricks.newTrick()))
+        .then(() => Promise.reject("Trick Complete!"));
     }
     return Promise.resolve("Trick Not Complete");
   }
@@ -48,8 +54,8 @@ const isTrickComplete = () => {
 const isRoundCompleted = () => {
   return (dispatch, getState) => {
     if (isRoundComplete(getState())) {
-      dispatch(fromRounds.newRound());
-      return Promise.reject("Round Complete!");
+      return delayedDispatch(1000, () => dispatch(fromRounds.newRound()))
+               .then(() => Promise.reject("Round Complete!"));
     }
     return Promise.resolve("Round is not complete!");
   }
@@ -58,7 +64,11 @@ const isRoundCompleted = () => {
 const isGameCompleted = () => {
   return (dispatch, getState) => {
     console.log("isGameComplete?");
-    return Promise.resolve("Game is not complete!");
+    if (isGameComplete(getState())) {
+      return Promise.reject("Game is complete");
+    } else {
+      return Promise.resolve("Game is not complete!");
+    }
   }
 }
 
@@ -67,9 +77,7 @@ const computerMove = () => {
     const state = getState();
     const currentPlayerID = getCurrentPlayerID(state);
     const nextCard = AIplayRandomCard(state, currentPlayerID);
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve(dispatch(playCard(currentPlayerID, nextCard))), 1000);
-    });
+    return delayedDispatch(1000, () => dispatch(playCard(currentPlayerID, nextCard)));
   }
 }
 
@@ -97,18 +105,28 @@ export const playCard = (playerID, card) => {
   }
 }
 
+const randomPop = (array) => {
+  const index = Math.floor(Math.random() * array.length);
+  return array.splice(index, 1)[0];
+}
+
 export const deal = () => {
   return (dispatch, getState) => {
     const suits = ["C", "D", "S", "H"];
     const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
     const players = getPlayers(getState());
+    let deck = [];
 
     for (let s = 0; s < suits.length; s++) {
       for (let v = 0; v < values.length; v++) {
-        let card = { value: values[v], suit: suits[s] }
-        let index = s*values.length + v
-        dispatch(fromPlayers.dealCard(players[index % players.length].id, card));
+        deck.push({ value: values[v], suit: suits[s] });
       }
+    }
+
+    const deckSize = deck.length;
+
+    for (let d = 0; d < deckSize; d++) {
+      dispatch(fromPlayers.dealCard(players[d % players.length].id, randomPop(deck)));
     }
   }
 };
