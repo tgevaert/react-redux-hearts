@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/heartsApp.css';
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import PageHeader from 'react-bootstrap/lib/PageHeader';

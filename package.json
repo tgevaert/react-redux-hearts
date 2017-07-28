@@ -2,8 +2,10 @@
   "name": "react-redux-hearts",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://localhost/~tgevaert/hearts2/",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "less": "^2.7.2",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.6.1",
@@ -21,8 +23,9 @@
     "redux-devtools-log-monitor": "^1.3.0"
   },
   "scripts": {
+    "build-css": "lessc src/bootstrap.less --include-path=./node_modules/bootstrap/less src/css/heartsBootstrap.css",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "analyze": "source-map-explorer build/static/js/main.*"

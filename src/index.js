@@ -1,10 +1,10 @@
 import React from 'react';
 import { render as ReactDOMRender } from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
-import 'bootstrap/dist/css/bootstrap.css';
+import './css/heartsBootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
+import './css/heartsApp.css';
 import './card_hand.svg';
-import './index.css';
 import HeartsApp from './heartsApp';
 import heartsCreateStore from './heartsCreateStore';
 import * as heartsActions from './actions';
