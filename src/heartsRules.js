@@ -53,5 +53,12 @@ export const constants = {
     } else {
       return 0;
     }
+  },
+
+  cardRank: (card) => {
+    if (card === undefined || card.suit === undefined || card.value === undefined) {
+      return 0;
+    }
+    return constants.cardSuits[card.suit].rank + constants.cardValues[card.value].rank;
   }
 };

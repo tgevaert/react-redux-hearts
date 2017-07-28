@@ -1,3 +1,4 @@
+import { constants as  heartsConstants } from '../heartsRules';
 // Actions
 
 export const ADD_PLAYER = "ADD_PLAYER";
@@ -8,7 +9,10 @@ export const PLAY_CARD = "PLAY_CARD";
 const playerHand = (state = [], action) => {
   switch(action.type) {
     case DEAL_CARD:
-      return [...state, action.card];
+      let sortIndex = 0;
+      const newCardRank = heartsConstants.cardRank(action.card);
+      for (sortIndex = 0; sortIndex < state.length && newCardRank > heartsConstants.cardRank(state[sortIndex]); sortIndex++) {}
+      return [...state.slice(0, sortIndex), action.card, ...state.slice(sortIndex)];
     case PLAY_CARD:
       const idx = state.findIndex(card => card === action.card);
       if (idx > -1) {
