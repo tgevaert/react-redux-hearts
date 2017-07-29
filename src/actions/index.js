@@ -55,10 +55,11 @@ const isRoundCompleted = () => {
   return (dispatch, getState) => {
     if (isRoundComplete(getState())) {
       return delayedDispatch(1000, () => dispatch(fromRounds.newRound()))
-               .then(() => Promise.reject("Round Complete!"));
-    }
-    return Promise.resolve("Round is not complete!");
+              .then(() => Promise.resolve(dispatch(deal())))
+              .then(() => Promise.reject("Round Complete!"));
   }
+  return Promise.resolve("Round is not complete!");
+}
 }
 
 const isGameCompleted = () => {
