@@ -1,12 +1,14 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
-import { getPlayers, getCurrentPlayerID, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isRoundComplete, isGameComplete } from '../reducers';
+import { getPlayers, getCurrentPlayerID, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
 import { AIplayRandomCard } from '../ai';
 
 export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
 
-const delayedDispatch = (delay, dispatch) => {
+const MOVE_DELAY = 350; // ms
+
+const delayedPromise = (delay, dispatch) => {
   return new Promise((resolve) => {
     setTimeout(() => resolve(dispatch()), delay);
   });
@@ -38,51 +40,20 @@ const isValidMove = (state, playerID, card) => {
   return false;
 }
 
-const isTrickComplete = () => {
-  return (dispatch, getState) => {
-    const state = getState();
-    const players = getPlayers(state);
-    const currentTrick = getCurrentTrick(state);
-    if (players.length === currentTrick.length) {
-      return delayedDispatch(1000, () => dispatch(fromTricks.newTrick()))
-        .then(() => Promise.reject("Trick Complete!"));
-    }
-    return Promise.resolve("Trick Not Complete");
-  }
-}
-
-const isRoundCompleted = () => {
-  return (dispatch, getState) => {
-    if (isRoundComplete(getState())) {
-      return delayedDispatch(1000, () => dispatch(fromRounds.newRound()))
-              .then(() => Promise.resolve(dispatch(deal())))
-              .then(() => Promise.reject("Round Complete!"));
-  }
-  return Promise.resolve("Round is not complete!");
-}
-}
-
-const isGameCompleted = () => {
-  return (dispatch, getState) => {
-    console.log("isGameComplete?");
-    if (isGameComplete(getState())) {
-      return Promise.reject("Game is complete");
-    } else {
-      return Promise.resolve("Game is not complete!");
-    }
-  }
-}
-
 const computerMove = () => {
   return (dispatch, getState) => {
     const state = getState();
-    const currentPlayerID = getCurrentPlayerID(state);
-    const nextCard = AIplayRandomCard(state, currentPlayerID);
-    return delayedDispatch(1000, () => dispatch(playCard(currentPlayerID, nextCard)));
+    const currentPlayer = getCurrentPlayer(state);
+    if (currentPlayer.playerType === "Human") {
+      return Promise.resolve("Waiting for human.");
+    } else {
+      const nextCard = AIplayRandomCard(state, currentPlayer.id);
+      return delayedPromise(MOVE_DELAY, () => dispatch(playCard(currentPlayer.id, nextCard)));
+    }
   }
 }
 
-export const playCard = (playerID, card) => {
+const gameTick = () => {
   // Eventually the control loop will be:
   // Select Cards
   // Pass Cards
@@ -92,15 +63,34 @@ export const playCard = (playerID, card) => {
   // Complete Game
   return (dispatch, getState) => {
     const state = getState();
+    let nextAction = null;
+    if (isGameComplete(state)) {
+      nextAction = null;
+    } else if (isRoundComplete(state)) {
+      nextAction = fromRounds.newRound;
+    } else if (isTrickComplete(state)) {
+      nextAction = fromTricks.newTrick;
+    } 
+
+    if (nextAction !== null) {
+      delayedPromise(MOVE_DELAY, () => dispatch(nextAction())).then(() => dispatch(computerMove()));
+    } else {
+      dispatch(computerMove());
+    }
+  }
+}
+
+export const playCard = (playerID, card) => {
+  return (dispatch, getState) => {
+    const state = getState();
     if (getCurrentPlayerID(state) === playerID && isValidMove(state, playerID, card)) {
+      // Play card, and tick over the game state
       dispatch(fromPlayers.playCard(playerID, card));
-      dispatch(isGameCompleted())
-        .then(() => dispatch(isRoundCompleted()))
-        .then(() => dispatch(isTrickComplete()))
-        .then(() => dispatch(computerMove()))
-        .catch((error) => console.log(error));
+      // If Playing local game, client must tick over game state, rather than wait for server action.
+      dispatch(gameTick());
       return Promise.resolve("Played Card Success!");
     } else {
+      // Invalid card or playing out of turn.
       return Promise.reject("Invalid Card Played.");
     }
   }

@@ -65,7 +65,7 @@ const heartsPlayers = (state = [], action) => {
 
 // Selectors
 
-const getPlayer = (state, playerID) => {
+export const getPlayerByID = (state, playerID) => {
   return state.find(player => player.id === playerID);
 }
 
@@ -74,7 +74,7 @@ export default heartsPlayers;
 export const getPlayers = (state) => state;
 export const getPlayerIDs = (state) => state.map(player => player.id);
 export const getPlayerHand = (state, playerID) => {
-  const player = getPlayer(state, playerID);
+  const player = getPlayerByID(state, playerID);
   return player.playerHand;
 };
 

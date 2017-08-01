@@ -44,7 +44,7 @@ export const getScores = (state, playerIDs) => {
     for (let trick of round.tricks) {
       trickPoints = fromHeartsTricks.getTrickPointValue(trick);
       if (trickPoints > 0) {
-        trickWinner = fromHeartsTricks.getTrickWinner(trick);
+        trickWinner = fromHeartsTricks.getTrickWinnerID(trick);
         roundScores[playerIDs.indexOf(trickWinner)] += trickPoints;
       }
     }
@@ -57,5 +57,5 @@ export const getCurrentTrick = (state) => fromHeartsTricks.getCurrentTrick(state
 export const getCurrentTrickSuit = (state) => fromHeartsTricks.getTrickSuit(getCurrentTrick(state));
 export const getPreviousTrick = (state) => fromHeartsTricks.getPreviousTrick(state[0].tricks);
 export const getRoundTrickHistory = (state) => fromHeartsTricks.getCompletedTricks(state[0].tricks);
-export const getCurrentWinner = (state) => fromHeartsTricks.getCurrentWinner(state[0].tricks);
+export const getCurrentWinnerID = (state) => fromHeartsTricks.getCurrentWinnerID(state[0].tricks);
 export default heartsRounds;

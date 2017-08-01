@@ -3,7 +3,7 @@ import heartsPlayers, * as fromHeartsPlayers from './heartsPlayers';
 import heartsRounds, * as fromHeartsRounds from './heartsRounds';
 import * as fromHeartsTricks from './heartsTricks';
 
-export const getCurrentPlayerID = (state) => {
+export const getCurrentPlayer = (state) => {
   let players = getPlayers(state);
   if (!players.length) {
     // No players yet
@@ -16,15 +16,24 @@ export const getCurrentPlayerID = (state) => {
     const previousTrick = getPreviousTrick(state);
     if (!previousTrick.length) {
       // Start of game, start with first player
-      return players[0].id;
+      return players[0];
     } 
     // Retain lead of previous trick winner
-    return fromHeartsTricks.getTrickWinner(previousTrick);
+    const previousWinnerID = fromHeartsTricks.getTrickWinnerID(previousTrick);
+    return players.find(player => player.id === previousWinnerID);
   }
   // If an ongoing trick, get the next player.
   const lastMove = fromHeartsTricks.getLastMove(currentTrick);
   const idx = players.findIndex(p => p.id === lastMove.playerID);
-  return players[(idx + 1) % players.length].id
+  return players[(idx + 1) % players.length];
+}
+
+export const getCurrentPlayerID = (state) => {
+  const currentPlayer = getCurrentPlayer(state);
+  if (currentPlayer === null) {
+    return null;
+  }
+  return currentPlayer.id;
 }
 
 const heartsGame = combineReducers({players: heartsPlayers, rounds: heartsRounds});
@@ -42,6 +51,15 @@ export const isRoundComplete = (state) => {
   return true;
 };
 
+export const isTrickComplete = (state) => {
+  const players = getPlayers(state);
+  const currentTrick = getCurrentTrick(state);
+  if (players.length === currentTrick.length) {
+    return true;
+  }
+  return false;
+};
+
 export const isGameComplete = (state) => {
   // Check cumulate score for each player.  Return true when scores reach above 100
   return false;
@@ -50,7 +68,8 @@ export const isGameComplete = (state) => {
 // Player selectors
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
 export const getPlayerIDs = (state) => fromHeartsPlayers.getPlayerIDs(state.players);
-export const getPlayerHand = (state, player) => fromHeartsPlayers.getPlayerHand(state.players, player);
+export const getPlayerByID = (state, playerID) => fromHeartsPlayers.getPlayerByID(state.players, playerID);
+export const getPlayerHand = (state, playerID) => fromHeartsPlayers.getPlayerHand(state.players, playerID);
 export const playerHandContainsCard = (state, playerID, card) => fromHeartsPlayers.playerHandContainsCard(state.players, playerID, card)
 export const playerHandContainsSuit = (state, playerID, suit) => fromHeartsPlayers.playerHandContainsSuit(state.players, playerID, suit)
 
@@ -58,7 +77,7 @@ export const playerHandContainsSuit = (state, playerID, suit) => fromHeartsPlaye
 export const getCurrentTrick = (state) => fromHeartsRounds.getCurrentTrick(state.rounds);
 export const getCurrentTrickSuit = (state) => fromHeartsRounds.getCurrentTrickSuit(state.rounds);
 export const getPreviousTrick = (state) => fromHeartsRounds.getPreviousTrick(state.rounds);
-export const getCurrentWinner = (state) => fromHeartsRounds.getCurrentWinner(state.rounds);
+export const getCurrentWinnerID = (state) => fromHeartsRounds.getCurrentWinnerID(state.rounds);
 export const getRoundTrickHistory = (state) => fromHeartsRounds.getRoundTrickHistory(state.rounds);
 export const isHeartsBroken = (state) => fromHeartsRounds.isHeartsBroken(state.rounds);
 export const getScores = (state) => fromHeartsRounds.getScores(state.rounds, getPlayerIDs(state));

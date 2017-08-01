@@ -45,11 +45,11 @@ it("Has no side effects.", () => {
   fromHeartsTricks.getCurrentTrick(tricks);
   fromHeartsTricks.getPreviousTrick(tricks);
   fromHeartsTricks.getCompletedTricks(tricks);
-  fromHeartsTricks.getCurrentWinner(tricks);
+  fromHeartsTricks.getCurrentWinnerID(tricks);
 
   // Trick Selectors
   fromHeartsTricks.getLastMove(trick);
   fromHeartsTricks.getTrickSuit(trick);
-  fromHeartsTricks.getTrickWinner(trick);
+  fromHeartsTricks.getTrickWinnerID(trick);
   fromHeartsTricks.getTrickPointValue(trick);
 });

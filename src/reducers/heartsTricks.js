@@ -50,7 +50,7 @@ export const getTrickSuit = (trick) => {
   return getCardSuit(trick[0].card);
 }
 
-export const getTrickWinner = (trick) => {
+export const getTrickWinnerID = (trick) => {
   let winningPlayerID = null, winningCard = null;
   winningCard = trick[0].card;
   winningPlayerID = trick[0].playerID;
@@ -66,12 +66,12 @@ export const getTrickWinner = (trick) => {
   return winningPlayerID;
 }
 
-export const getCurrentWinner = (state) => {
+export const getCurrentWinnerID = (state) => {
   const currentTrick = getCurrentTrick(state);
   if (!currentTrick.length) {
     return null;
   }
-  return getTrickWinner(currentTrick);
+  return getTrickWinnerID(currentTrick);
 }
 
 export const getTrickPointValue = (trick) => trick.reduce((acc, move) => acc + heartsConstants.pointValue(move.card), 0);
