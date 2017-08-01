@@ -56,6 +56,20 @@ const computerMove = () => {
   }
 }
 
+const newRoundThunk = () => {
+  return (dispatch, getState) => {
+    dispatch(fromRounds.newRound());
+    dispatch(deal());
+    return Promise.resolve("New Round Dealt!");
+  }
+}
+
+const gameOverMan = () => {
+  return (dispatch, getState) => {
+    window.alert("Game over man!");
+  }
+}
+
 const gameTick = () => {
   // Eventually the control loop will be:
   // Select Cards
@@ -68,9 +82,9 @@ const gameTick = () => {
     const state = getState();
     let nextAction = null;
     if (isGameComplete(state)) {
-      nextAction = null;
+      nextAction = gameOverMan;
     } else if (isRoundComplete(state)) {
-      nextAction = fromRounds.newRound;
+      nextAction = newRoundThunk;
     } else if (isTrickComplete(state)) {
       nextAction = fromTricks.newTrick;
     } 

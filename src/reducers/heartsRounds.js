@@ -48,6 +48,7 @@ export const getScores = (state, playerIDs) => {
         roundScores[playerIDs.indexOf(trickWinner)] += trickPoints;
       }
     }
+    // Check if someone shot the moon.
     scores.push(roundScores);
   }
   return scores;

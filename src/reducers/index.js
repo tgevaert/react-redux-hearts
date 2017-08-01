@@ -61,7 +61,21 @@ export const isTrickComplete = (state) => {
 };
 
 export const isGameComplete = (state) => {
+  // First check if round is complete..
+  if (!isRoundComplete(state)) {
+    return false;
+  }
   // Check cumulate score for each player.  Return true when scores reach above 100
+  const currentScores = getScores(state);
+  let sum = [...currentScores[0]].fill(0);
+  for (let roundScore of currentScores) {
+    for (let s = 0; s < roundScore.length; s++) {
+      sum[s] += roundScore[s];
+      if (sum[s] > 100) {
+        return true;
+      }
+    }
+  }
   return false;
 };
 
