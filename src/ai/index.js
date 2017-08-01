@@ -1,4 +1,4 @@
-import { getCurrentTrick, getPlayerHand, getCurrentTrickSuit, getCurrentTrickValue, playerHandContainsSuit } from '../reducers'
+import { getCurrentTrick, getPlayerHand, getCurrentTrickSuit, getCurrentTrickValue, playerHandContainsSuit, isHeartsBroken } from '../reducers'
 import { constants as heartsConstants } from '../heartsRules';
 
 const cardCost = (card) => {
@@ -39,12 +39,20 @@ export const AIplayCard = (state, playerID) => {
 export const AIplayRandomCard = (state, playerID) => {
   const hand = getPlayerHand(state, playerID);
   const suit = getCurrentTrickSuit(state);
+  const hasLead = (suit === null);
   const followSuit = playerHandContainsSuit(state, playerID, suit);
+  const brokenHearts = isHeartsBroken(state);
 
   let cardPool = [];
 
   if (followSuit) {
     cardPool = hand.filter((card) => { return card.suit === suit; });
+  } else if (hasLead && !brokenHearts) {
+    cardPool = hand.filter((card) => { return card.suit !== "H"; });
+    if (cardPool.length === 0) {
+      // Only hearts left in hand
+      cardPool = hand;
+    }
   } else {
     cardPool = hand;
   }

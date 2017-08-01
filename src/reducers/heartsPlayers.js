@@ -97,3 +97,13 @@ export const playerHandContainsSuit = (state, playerID, suit) => {
   }
   return false;
 };
+
+export const isPlayerHandOnlyHearts = (state, playerID) => {
+  const playerHand = getPlayerHand(state, playerID);
+  for (let card of playerHand) {
+    if (card.suit !== "H") {
+      return false;
+    }
+  }
+  return true;
+};

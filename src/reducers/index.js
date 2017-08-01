@@ -72,6 +72,7 @@ export const getPlayerByID = (state, playerID) => fromHeartsPlayers.getPlayerByI
 export const getPlayerHand = (state, playerID) => fromHeartsPlayers.getPlayerHand(state.players, playerID);
 export const playerHandContainsCard = (state, playerID, card) => fromHeartsPlayers.playerHandContainsCard(state.players, playerID, card)
 export const playerHandContainsSuit = (state, playerID, suit) => fromHeartsPlayers.playerHandContainsSuit(state.players, playerID, suit)
+export const isPlayerHandOnlyHearts = (state, playerID) => fromHeartsPlayers.isPlayerHandOnlyHearts(state.players, playerID)
 
 // Round selectors
 export const getCurrentTrick = (state) => fromHeartsRounds.getCurrentTrick(state.rounds);

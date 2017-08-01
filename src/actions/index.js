@@ -1,7 +1,7 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
-import { getPlayers, getCurrentPlayerID, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, getCurrentTrickSuit, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
+import { getPlayers, getCurrentPlayerID, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
 import { AIplayRandomCard } from '../ai';
 
 export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
@@ -28,7 +28,10 @@ const isValidMove = (state, playerID, card) => {
     // Check if hearts broken
     if (card.suit === "H" && !isHeartsBroken(state)) {
       // Need to check if only hearts left in hand
-      return false
+      if (isPlayerHandOnlyHearts) {
+        return true;
+      }
+      return false;
     }
     return true;
   }
