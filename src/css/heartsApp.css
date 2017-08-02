@@ -1,3 +1,23 @@
+@keyframes slidewest {
+  0% { transform: translate(0px, 0px) }
+  100% { transform: translate(-1000px, 0px) }
+}
+
+@keyframes slidenorth {
+  0% { transform: translate(0px, 0px) }
+  100% { transform: translate(0px, -1000px) }
+}
+
+@keyframes slideeast {
+  0% { transform: translate(0px, 0px) }
+  100% { transform: translate(1000px, 0px) }
+}
+
+@keyframes slidesouth {
+  0% { transform: translate(0px, 0px) }
+  100% { transform: translate(0px, 1000px) }
+}
+
 body {
   background-image: url("../card_hand.svg");
   background-size: 100%;
@@ -7,6 +27,8 @@ body {
 
 .jumbotron {
   background-color: rgba(238,238,238,0.97);
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 td, th {
@@ -37,6 +59,8 @@ td, th {
 
 .trick {
   position: relative;
+  margin-left: auto;
+  margin-right: auto;
   height: 12em;
   width: 12em;
 }
@@ -53,8 +77,45 @@ td, th {
   margin-bottom: auto;
 }
 
+.slide-out-west {
+  animation: slidewest 0.25s 0.25s ease-out;
+}
+
+.slide-out-north {
+  animation: slidenorth 0.25s 0.25s ease-out;
+}
+
+.slide-out-east {
+  animation: slideeast 0.25s 0.25s ease-out;
+}
+
+.slide-out-south {
+  animation: slidesouth 0.25s 0.25s ease-out;
+}
+
+.slide-in-west {
+  animation: slidewest 0.2s ease-out reverse;
+}
+
+.slide-in-north {
+  animation: slidenorth 0.2s ease-out reverse;
+}
+
+.slide-in-east {
+  animation: slideeast 0.2s ease-out reverse;
+}
+
+.slide-in-south {
+  animation: slidesouth 0.2s ease-out reverse;
+}
+
 .trick .card.north {
   top: -2.5em;
+}
+
+.trick .card.north.unplayed {
+  top: -2.5em;
+  background-color: #ccc;
 }
 
 .trick .card.east {

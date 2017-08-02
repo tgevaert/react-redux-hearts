@@ -1,12 +1,12 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
-import { getPlayers, getCurrentPlayerID, getCurrentPlayer, getCurrentTrick, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
-import { AIplayRandomCard } from '../ai';
+import { getPlayers, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
+import AIplayRandomCard from '../ai/random';
 
 export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
 
-const MOVE_DELAY = 350; // ms
+const MOVE_DELAY = 500; // ms
 
 const delayedPromise = (delay, dispatch) => {
   return new Promise((resolve) => {
@@ -15,6 +15,10 @@ const delayedPromise = (delay, dispatch) => {
 }
 
 const isValidMove = (state, playerID, card) => {
+  if (isTrickComplete(state)) {
+    return false;
+  }
+
   // Does Player possess card
   if (!playerHandContainsCard(state, playerID, card)) {
     return false;
@@ -82,7 +86,8 @@ const gameTick = () => {
     const state = getState();
     let nextAction = null;
     if (isGameComplete(state)) {
-      nextAction = gameOverMan;
+      gameOverMan();
+      return;
     } else if (isRoundComplete(state)) {
       nextAction = newRoundThunk;
     } else if (isTrickComplete(state)) {

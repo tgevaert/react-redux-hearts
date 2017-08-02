@@ -11,7 +11,16 @@ const ScoreTable = ({players, scores}) => {
     }
   }
   const tableHeading = players.map(p => <th key={p.id} className={"col-md-3"}>{p.name}</th>);
-  const tableRows = scores.map(scoreRow => <tr key={scores.indexOf(scoreRow)}>{scoreRow.map(score => <td className={"col-md-3"}>{score}</td>)}</tr>)
+  const tableRows = scores.map((scoreRow, rowIndex) => {
+    return (<tr key={rowIndex}>
+      {scoreRow.map((score, playerIndex) => {
+        return (<td key={playerIndex} className={"col-md-3"}>
+          {score}
+        </td>)
+        }
+      )}
+    </tr>)
+  });
 
   return (
       <Table>
@@ -25,7 +34,7 @@ const ScoreTable = ({players, scores}) => {
         </tbody>
         <thead>
           <tr>
-            {sum.map((s) => <th>{s}</th>)}
+            {sum.map((s, index) => <th key={index}>{s}</th>)}
           </tr>
         </thead>
 

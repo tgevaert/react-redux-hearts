@@ -12,7 +12,7 @@ import * as heartsActions from './actions';
 const heartsStore = heartsCreateStore();
 const render = () => ReactDOMRender(<HeartsApp store={heartsStore} />, document.getElementById('root'));
 heartsStore.subscribe(render);
-heartsStore.dispatch(heartsActions.addPlayer("Bob", "AI"));
+heartsStore.dispatch(heartsActions.addPlayer("Bob", "Human"));
 heartsStore.dispatch(heartsActions.addPlayer("Doug", "AI"));
 heartsStore.dispatch(heartsActions.addPlayer("Bill", "AI"));
 heartsStore.dispatch(heartsActions.addPlayer("Ted", "AI"));
