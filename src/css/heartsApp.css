@@ -63,6 +63,11 @@ td, th {
   padding-left: 0.1em;
 }
 
+.hand .card:hover {
+  transform: translate(0, -0.2em);
+  transition: 0.1s;
+}
+
 .trick {
   position: relative;
   margin-left: auto;
