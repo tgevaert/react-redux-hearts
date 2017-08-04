@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deal } from '../actions';
+import { newGame } from '../actions';
 
 const DealButtonPresentation = ({handleClick}) => {
   return (
-      <button onClick={handleClick}>DEAL!</button>
+      <button onClick={handleClick}>New Game</button>
   );
 };
 
-export const DealButton = connect(null, {handleClick: deal})(DealButtonPresentation);
+export const DealButton = connect(null, {handleClick: newGame})(DealButtonPresentation);

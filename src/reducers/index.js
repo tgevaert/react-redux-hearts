@@ -71,7 +71,7 @@ export const isGameComplete = (state) => {
   for (let roundScore of currentScores) {
     for (let s = 0; s < roundScore.length; s++) {
       sum[s] += roundScore[s];
-      if (sum[s] > 100) {
+      if (sum[s] > 10) {
         return true;
       }
     }

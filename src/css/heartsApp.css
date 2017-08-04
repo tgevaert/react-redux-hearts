@@ -135,3 +135,24 @@ td, th {
 .trick .card.west {
   left: -2.5em;
 }
+
+.game-over {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10,10,10,0.3);
+}
+
+.game-over div {
+  position: relative;
+  top: 25%;
+  height: 50%;
+  width: 290px;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  transition: 2s;
+}

@@ -52,3 +52,9 @@ it('Calculates a trick value', () => {
   state = heartsReducer(state, fromPlayerActions.playCard(testConstants.playerBob.id, testConstants.cardAH));
   expect(fromHeartsReducer.getCurrentTrickPointValue(state)).toEqual(1);
 });
+
+it("Tests game state before game started.", () => {
+  let state = undefined;
+  //state = heartsReducer(state, undefined);
+  fromHeartsReducer.isGameComplete(state);
+});

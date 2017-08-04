@@ -116,7 +116,14 @@ export const playCard = (playerID, card) => {
       return Promise.reject("Invalid Card Played.");
     }
   }
-}
+};
+
+export const newGame = () => {
+  return (dispatch, getState) => {
+    dispatch(fromRounds.newGame());
+    dispatch(deal());
+  }
+};
 
 const randomPop = (array) => {
   const index = Math.floor(Math.random() * array.length);

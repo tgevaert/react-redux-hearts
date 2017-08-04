@@ -1,6 +1,7 @@
 import { constants as  heartsConstants } from '../heartsRules';
-// Actions
 
+// Actions
+import { NEW_GAME } from './heartsRounds';
 export const ADD_PLAYER = "ADD_PLAYER";
 export const DEAL_CARD = "DEAL_CARD";
 export const PLAY_CARD = "PLAY_CARD";
@@ -33,9 +34,11 @@ const heartsPlayer = (state = {}, action) => {
         id: action.id, 
         name: action.name, 
         playerType: action.playerType, 
-        playerHand: playerHand([], action)
+        playerHand: playerHand(undefined, action)
       }
       return nextState;
+    case NEW_GAME:
+      return Object.assign({}, state, {playerHand: playerHand(undefined, action)});
     case DEAL_CARD:
     case PLAY_CARD:
       if (state.id !== action.playerID) {
@@ -56,6 +59,7 @@ const heartsPlayers = (state = [], action) => {
       return nextState;
     case DEAL_CARD:
     case PLAY_CARD:
+    case NEW_GAME:
       nextState = state.map(player => heartsPlayer(player, action));
       return nextState;
     default:
