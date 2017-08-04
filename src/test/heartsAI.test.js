@@ -1,7 +1,7 @@
 import * as testConstants from './testConstants';
 import heartsReducer, * as fromHeartsReducer from '../reducers';
 import * as fromPlayerActions from '../actions/players';
-import { AIplayRandomCard } from '../ai';
+import AIplayRandomCard from '../ai/random';
 
 let state = undefined;
 state = heartsReducer(undefined, testConstants.addPlayerBob);

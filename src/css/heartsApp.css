@@ -1,21 +1,21 @@
 @keyframes slidewest {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(-1000px, 0px) }
+  100% { transform: translate(-100%, 0px) }
 }
 
 @keyframes slidenorth {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(0px, -1000px) }
+  100% { transform: translate(0px, -100%) }
 }
 
 @keyframes slideeast {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(1000px, 0px) }
+  100% { transform: translate(100%, 0px) }
 }
 
 @keyframes slidesouth {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(0px, 1000px) }
+  100% { transform: translate(0px, 100%) }
 }
 
 body {
@@ -27,6 +27,12 @@ body {
 
 .jumbotron {
   background-color: rgba(238,238,238,0.97);
+}
+
+.game-board {
+  height: 12em;
+  width: 12em;
+  margin: auto;
   overflow-x: hidden;
   overflow-y: hidden;
 }
@@ -78,19 +84,19 @@ td, th {
 }
 
 .slide-out-west {
-  animation: slidewest 0.25s 0.25s ease-out;
+  animation: slidewest 0.25s 0.25s ease-out forwards;
 }
 
 .slide-out-north {
-  animation: slidenorth 0.25s 0.25s ease-out;
+  animation: slidenorth 0.25s 0.25s ease-out forwards;
 }
 
 .slide-out-east {
-  animation: slideeast 0.25s 0.25s ease-out;
+  animation: slideeast 0.25s 0.25s ease-out forwards;
 }
 
 .slide-out-south {
-  animation: slidesouth 0.25s 0.25s ease-out;
+  animation: slidesouth 0.25s 0.25s ease-out forwards;
 }
 
 .slide-in-west {

@@ -5,7 +5,9 @@ import CurrentTrick from './CurrentTrick';
 export const HeartsGame = () => {
   return (
       <div>
-        <CurrentTrick /> 
+        <div className="game-board">
+          <CurrentTrick /> 
+        </div>
         <HeartsPlayers />
       </div>
   )
