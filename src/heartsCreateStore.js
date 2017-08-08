@@ -5,13 +5,15 @@ import browserCache, { loadState } from './middleware/browserCache';
 
 const heartsCreateStore = () => {
   const middlewares = [thunk, browserCache];
-  const cachedState = loadState();
+//  const cachedState = loadState();
   let store = null;
   if (process.env.NODE_ENV === 'production') {
-    store = createStore(heartsReducer, cachedState, applyMiddleware(...middlewares));
+//    store = createStore(heartsReducer, cachedState, applyMiddleware(...middlewares));
+    store = createStore(heartsReducer, applyMiddleware(...middlewares));
   } else {
     const HeartsDevTools = require('./components/heartsAppDevTools');
-    store = createStore(heartsReducer, cachedState, compose(applyMiddleware(...middlewares), HeartsDevTools.default.instrument()));
+//    store = createStore(heartsReducer, cachedState, compose(applyMiddleware(...middlewares), HeartsDevTools.default.instrument()));
+    store = createStore(heartsReducer, compose(applyMiddleware(...middlewares), HeartsDevTools.default.instrument()));
   }
   return store;
 }

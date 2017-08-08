@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Well from 'react-bootstrap/lib/Well';
 import { PlayerHand } from './PlayerHand';
 import { getPlayers, getCurrentPlayerID, isTrickComplete } from '../reducers';
 
@@ -9,7 +8,7 @@ const Player = ({player, isCurrentPlayer}) => {
   
   return (
     <div className={className}>
-      <li>{player.name} - {player.playerType}</li>
+      <li>{player.name}</li>
       <PlayerHand player={player} />
     </div>
   )
@@ -20,11 +19,9 @@ const Players = ({players, currentPlayerID}) => {
 
   return (
     <div>
-      <Well bsSize="small">
-        <ul className="list-unstyled">
-          {playerElements}
-        </ul>
-      </Well>
+      <ul className="list-unstyled">
+        {playerElements}
+      </ul>
     </div>
   );
 }

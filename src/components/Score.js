@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Table from 'react-bootstrap/lib/Table';
 import { getPlayers, getScores } from '../reducers';
 
 const ScoreTable = ({players, scores}) => {
@@ -10,11 +9,11 @@ const ScoreTable = ({players, scores}) => {
       sum[s] += score[s];
     }
   }
-  const tableHeading = players.map(p => <th key={p.id} className={"col-md-3"}>{p.name}</th>);
+  const tableHeading = players.map(p => <th key={p.id}>{p.name}</th>);
   const tableRows = scores.map((scoreRow, rowIndex) => {
     return (<tr key={rowIndex}>
       {scoreRow.map((score, playerIndex) => {
-        return (<td key={playerIndex} className={"col-md-3"}>
+        return (<td key={playerIndex}>
           {score}
         </td>)
         }
@@ -23,7 +22,7 @@ const ScoreTable = ({players, scores}) => {
   });
 
   return (
-      <Table>
+      <table>
         <thead>
           <tr>
             {tableHeading}
@@ -38,7 +37,7 @@ const ScoreTable = ({players, scores}) => {
           </tr>
         </thead>
 
-      </Table>
+      </table>
       )
 }
 

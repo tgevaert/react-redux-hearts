@@ -22,12 +22,45 @@ body {
   background-image: url("../card_hand.svg");
   background-size: 100%;
   background-repeat: no-repeat;
-  background-color: #9fdfbf;
+  background-color: #212121;
 }
 
 .jumbotron {
-  background-color: rgba(238,238,238,0.97);
+  background-color: rgba(66, 66, 66, 0.9);
+  border-radius: 0.3em;
 }
+
+.game-title {
+  background-color: rgba(66, 66, 66, 0.9);
+  border-radius: 0.3em;
+}
+
+.game-title h1 {
+  padding-left: 0.3em;
+  color: #E0E0E0;
+}
+
+.column-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.north-player, .south-player {
+  margin: auto;
+  text-align: center;
+}
+
+.east-player, .west-player, .north-player {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .east-player, .west-player, .north-player {
+    display: block;
+  }
+}
+
 
 .game-board {
   height: 12em;
