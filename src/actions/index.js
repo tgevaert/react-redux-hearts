@@ -1,7 +1,8 @@
 import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
-import { getPlayers, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
+import * as fromPhases from './phases';
+import { getPlayers, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isCurrentPhase, gamePhases, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
 import AIplayRandomCard from '../ai/random';
 
 export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
@@ -64,6 +65,7 @@ const newRoundThunk = () => {
   return (dispatch, getState) => {
     dispatch(fromRounds.newRound());
     dispatch(deal());
+    dispatch(fromPhases.startPassing());
     return Promise.resolve("New Round Dealt!");
   }
 }
@@ -117,6 +119,17 @@ export const playCard = (playerID, card) => {
     }
   }
 };
+
+
+export const playOrToggleCard = (playerID, card) => {
+  return (dispatch, getState) => {
+    if (isCurrentPhase(getState(), gamePhases.GAME_START)) {
+      dispatch(fromPlayers.toggleCard(playerID, card));
+    } else {
+      dispatch(playCard(playerID, card)); 
+    }
+  }
+}
 
 export const newGame = () => {
   return (dispatch, getState) => {

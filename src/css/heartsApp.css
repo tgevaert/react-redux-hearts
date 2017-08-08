@@ -96,7 +96,7 @@ td, th {
   padding-left: 0.1em;
 }
 
-.hand .card:hover {
+.hand .card:hover, .hand .card.toggled {
   transform: translate(0, -0.2em);
   transition: 0.1s;
 }

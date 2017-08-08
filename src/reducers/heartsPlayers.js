@@ -5,17 +5,32 @@ import { NEW_GAME } from './heartsRounds';
 export const ADD_PLAYER = "ADD_PLAYER";
 export const DEAL_CARD = "DEAL_CARD";
 export const PLAY_CARD = "PLAY_CARD";
+export const TOGGLE_CARD = "TOGGLE_CARD";
 
 // Reducers
+const selectedCards = (state = [], action) => {
+  switch (action.type) {
+    case TOGGLE_CARD: 
+      const idx = state.findIndex(card => (card.value === action.card.value && card.suit === action.card.suit));
+      if (idx > -1) {
+        return [].concat(state.slice(0, idx), state.slice(idx+1));
+      } else {
+        return [...state, action.card];
+      }
+    default:
+      return state;
+  }
+}
+
 const playerHand = (state = [], action) => {
-  switch(action.type) {
+  switch (action.type) {
     case DEAL_CARD:
       let sortIndex = 0;
       const newCardRank = heartsConstants.cardRank(action.card);
       for (sortIndex = 0; sortIndex < state.length && newCardRank > heartsConstants.cardRank(state[sortIndex]); sortIndex++) {}
       return [...state.slice(0, sortIndex), action.card, ...state.slice(sortIndex)];
     case PLAY_CARD:
-      const idx = state.findIndex(card => card === action.card);
+      const idx = state.findIndex(card => (card.value === action.card.value && card.suit === action.card.suit));
       if (idx > -1) {
         return [].concat(state.slice(0, idx), state.slice(idx+1));
       } else {
@@ -28,13 +43,14 @@ const playerHand = (state = [], action) => {
 
 const heartsPlayer = (state = {}, action) => {
   let nextState = null;
-  switch(action.type) {
+  switch (action.type) {
     case ADD_PLAYER:
       nextState = {
         id: action.id, 
         name: action.name, 
         playerType: action.playerType, 
-        playerHand: playerHand(undefined, action)
+        playerHand: playerHand(undefined, action),
+        selectedCards: selectedCards(undefined, action)
       }
       return nextState;
     case NEW_GAME:
@@ -45,6 +61,12 @@ const heartsPlayer = (state = {}, action) => {
         return state
       }
       nextState = Object.assign({}, state, {playerHand: playerHand(state.playerHand, action)});
+      return nextState;
+    case TOGGLE_CARD:
+      if (state.id !== action.playerID) {
+        return state
+      }
+      nextState = Object.assign({}, state, {selectedCards: selectedCards(state.selectedCards, action)});
       return nextState;
     default:
       return state;
@@ -57,9 +79,10 @@ const heartsPlayers = (state = [], action) => {
     case ADD_PLAYER:
       nextState = [...state, heartsPlayer(state, action)];
       return nextState;
+    case NEW_GAME:
     case DEAL_CARD:
     case PLAY_CARD:
-    case NEW_GAME:
+    case TOGGLE_CARD:
       nextState = state.map(player => heartsPlayer(player, action));
       return nextState;
     default:
@@ -81,6 +104,11 @@ export const getPlayerHand = (state, playerID) => {
   const player = getPlayerByID(state, playerID);
   return player.playerHand;
 };
+
+export const getSelectedCards = (state, playerID) => {
+  const player = getPlayerByID(state, playerID);
+  return player.selectedCards;
+}
 
 export const playerHandContainsCard = (state, playerID, card) => {
   const playerHand = getPlayerHand(state, playerID);

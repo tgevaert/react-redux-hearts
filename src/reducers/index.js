@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import heartsPlayers, * as fromHeartsPlayers from './heartsPlayers';
 import heartsRounds, * as fromHeartsRounds from './heartsRounds';
+import heartsPhases, * as fromHeartsPhases from './heartsPhases';
 import * as fromHeartsTricks from './heartsTricks';
 
 export const getCurrentPlayer = (state) => {
@@ -36,7 +37,7 @@ export const getCurrentPlayerID = (state) => {
   return currentPlayer.id;
 }
 
-const heartsGame = combineReducers({players: heartsPlayers, rounds: heartsRounds});
+const heartsGame = combineReducers({players: heartsPlayers, rounds: heartsRounds, phase: heartsPhases});
 
 export default heartsGame;
 
@@ -84,6 +85,7 @@ export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players)
 export const getPlayerIDs = (state) => fromHeartsPlayers.getPlayerIDs(state.players);
 export const getPlayerByID = (state, playerID) => fromHeartsPlayers.getPlayerByID(state.players, playerID);
 export const getPlayerHand = (state, playerID) => fromHeartsPlayers.getPlayerHand(state.players, playerID);
+export const getSelectedCards = (state, playerID) => fromHeartsPlayers.getSelectedCards(state.players, playerID);
 export const playerHandContainsCard = (state, playerID, card) => fromHeartsPlayers.playerHandContainsCard(state.players, playerID, card)
 export const playerHandContainsSuit = (state, playerID, suit) => fromHeartsPlayers.playerHandContainsSuit(state.players, playerID, suit)
 export const isPlayerHandOnlyHearts = (state, playerID) => fromHeartsPlayers.isPlayerHandOnlyHearts(state.players, playerID)
@@ -99,3 +101,7 @@ export const getScores = (state) => fromHeartsRounds.getScores(state.rounds, get
 
 // Trick selectors
 export const getCurrentTrickPointValue = (state) => fromHeartsTricks.getTrickPointValue(getCurrentTrick(state)); 
+
+// Phase selectors
+export const isCurrentPhase = (state, phase) => fromHeartsPhases.isCurrentPhase(state.phase, phase);
+export const gamePhases = fromHeartsPhases.gamePhases;
