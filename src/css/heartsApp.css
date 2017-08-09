@@ -97,8 +97,15 @@ td, th {
 }
 
 .hand .card:hover, .hand .card.toggled {
-  transform: translate(0, -0.2em);
+  transform: translate(0, -0.25em);
+}
+
+.hand .card:hover {
   transition: 0.1s;
+}
+
+.hand .card.toggled {
+  background: rgb(235, 235, 235);
 }
 
 .trick {

@@ -5,7 +5,7 @@ import { getPlayerHand, getSelectedCards } from '../reducers';
 import { playOrToggleCard } from '../actions';
 
 const isToggled  = (selectedCards, card) => {
-  return (selectedCards.findIndex(c => (c.suit === card && c.value === card.value)) > -1);
+  return (selectedCards.findIndex(c => (c.suit === card.suit && c.value === card.value)) > -1);
 };
 
 const PlayerHandPresentation = ({player, cards, selectedCards = [], handleClick}) => {

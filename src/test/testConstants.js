@@ -3,12 +3,15 @@ export const dummyAction = {type: "DUMMY_ACTION"}
 
 export const emptyHand = [];
 
+export const emptySelectedCards = [];
+
 
 export const player = {
   name: "",
   id: null,
   playerType: "Human",
-  playerHand: emptyHand
+  playerHand: emptyHand,
+  selectedCards: emptySelectedCards,
 }
 
 export const playerBob = Object.assign({}, player, {id: 1, name: "Bob"});

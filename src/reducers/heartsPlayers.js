@@ -6,6 +6,7 @@ export const ADD_PLAYER = "ADD_PLAYER";
 export const DEAL_CARD = "DEAL_CARD";
 export const PLAY_CARD = "PLAY_CARD";
 export const TOGGLE_CARD = "TOGGLE_CARD";
+export const PASS_CARDS = "PASS_CARDS";
 
 // Reducers
 const selectedCards = (state = [], action) => {
@@ -22,20 +23,48 @@ const selectedCards = (state = [], action) => {
   }
 }
 
+const addCard = (cards, c) => {
+  let sortIndex = 0;
+  const newCardRank = heartsConstants.cardRank(c);
+  for (sortIndex = 0; sortIndex < cards.length && newCardRank > heartsConstants.cardRank(cards[sortIndex]); sortIndex++) {}
+  return [...cards.slice(0, sortIndex), c, ...cards.slice(sortIndex)];
+};
+
+const removeCard = (cards, c) => {
+  const idx = cards.findIndex(card => (card.value === c.value && card.suit === c.suit));
+  if (idx > -1) {
+    return [].concat(cards.slice(0, idx), cards.slice(idx+1));
+  } else {
+    return cards;
+  }
+};
+
 const playerHand = (state = [], action) => {
   switch (action.type) {
     case DEAL_CARD:
-      let sortIndex = 0;
-      const newCardRank = heartsConstants.cardRank(action.card);
-      for (sortIndex = 0; sortIndex < state.length && newCardRank > heartsConstants.cardRank(state[sortIndex]); sortIndex++) {}
-      return [...state.slice(0, sortIndex), action.card, ...state.slice(sortIndex)];
+      return addCard(state, action.card);
     case PLAY_CARD:
-      const idx = state.findIndex(card => (card.value === action.card.value && card.suit === action.card.suit));
-      if (idx > -1) {
-        return [].concat(state.slice(0, idx), state.slice(idx+1));
-      } else {
-        return state;
+      return removeCard(state, action.card);
+    case PASS_CARDS:
+      let containsAllCards = true;
+      let containsNoCards = true;
+      let idx = null;
+      for (let card of action.cards) {
+        idx = state.findIndex(c => (card.value === c.value && card.suit === c.suit));
+        if (idx > -1) {
+          containsAllCards *= true;
+          containsNoCards = false;
+        } else {
+          containsAllCards = false;
+          containsNoCards *= true;
+        }
       }
+      if (containsAllCards) {
+        return action.cards.reduce(removeCard, state);
+      } else if (containsNoCards) {
+        return action.cards.reduce(addCard, state);
+      }
+      return state;
     default:
       return state;
   }
@@ -68,6 +97,20 @@ const heartsPlayer = (state = {}, action) => {
       }
       nextState = Object.assign({}, state, {selectedCards: selectedCards(state.selectedCards, action)});
       return nextState;
+    case PASS_CARDS:
+      if (action.fromPlayerID === state.id) {
+        nextState = Object.assign({}, state, {
+          selectedCards: selectedCards(undefined, action), 
+          playerHand: playerHand(state.playerHand, action)
+        });
+        return nextState;
+      } else if (action.toPlayerID === state.id) {
+        nextState = Object.assign({}, state, {
+          playerHand: playerHand(state.playerHand, action)
+        });
+        return nextState;
+      }
+      return state;
     default:
       return state;
   }
@@ -83,6 +126,7 @@ const heartsPlayers = (state = [], action) => {
     case DEAL_CARD:
     case PLAY_CARD:
     case TOGGLE_CARD:
+    case PASS_CARDS:
       nextState = state.map(player => heartsPlayer(player, action));
       return nextState;
     default:
@@ -93,6 +137,12 @@ const heartsPlayers = (state = [], action) => {
 // Selectors
 
 export const getPlayerByID = (state, playerID) => {
+  if (state === undefined) {
+    throw new Error("State is not defined..");
+  };
+  if (state.find === undefined) {
+    throw new Error("State is not an array..? " + JSON.stringify(state));
+  };
   return state.find(player => player.id === playerID);
 }
 

@@ -1,4 +1,7 @@
 // Actions
+import { NEW_GAME, NEW_ROUND } from './heartsRounds';
+import { NEW_TRICK } from './heartsTricks';
+import { PLAY_CARD } from './heartsPlayers';
 export const SET_PHASE = "SET_PHASE";
 
 // GAME_START: 
@@ -40,6 +43,14 @@ const heartsPhase = (state = gamePhases.GAME_START, action) => {
         return state;
       }
       return gamePhases[action.phase];
+    case NEW_GAME:
+      return gamePhases.GAME_START;
+    case NEW_ROUND:
+      return gamePhases.ROUND_START;
+    case PLAY_CARD:
+      return gamePhases.PLAYING;
+    case NEW_TRICK:
+      return gamePhases.TRICK_START;
     default:
     return state;
   }

@@ -120,11 +120,17 @@ export const playCard = (playerID, card) => {
   }
 };
 
+const toggleCard = (playerID, card) => {
+  return (dispatch, getState) => {
+    dispatch(fromPlayers.toggleCard(playerID, card));
+    dispatch(gameTick());
+  }
+}
 
 export const playOrToggleCard = (playerID, card) => {
   return (dispatch, getState) => {
-    if (isCurrentPhase(getState(), gamePhases.GAME_START)) {
-      dispatch(fromPlayers.toggleCard(playerID, card));
+    if (isCurrentPhase(getState(), gamePhases.PASSING)) {
+      dispatch(toggleCard(playerID, card));
     } else {
       dispatch(playCard(playerID, card)); 
     }
@@ -135,6 +141,8 @@ export const newGame = () => {
   return (dispatch, getState) => {
     dispatch(fromRounds.newGame());
     dispatch(deal());
+    dispatch(fromPhases.startPassing());
+    dispatch(gameTick());
   }
 };
 
