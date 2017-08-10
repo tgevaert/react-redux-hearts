@@ -26,6 +26,7 @@ export const SET_PHASE = "SET_PHASE";
 export const gamePhases = {
   GAME_START: "GAME_START",
   GAME_END: "GAME_END",
+  ROUND_NEW: "ROUND_NEW",
   ROUND_START: "ROUND_START",
   ROUND_END: "ROUND_END",
   TRICK_START: "TRICK_START",
@@ -46,7 +47,7 @@ const heartsPhase = (state = gamePhases.GAME_START, action) => {
     case NEW_GAME:
       return gamePhases.GAME_START;
     case NEW_ROUND:
-      return gamePhases.ROUND_START;
+      return gamePhases.ROUND_NEW;
     case PLAY_CARD:
       return gamePhases.PLAYING;
     case NEW_TRICK:
@@ -61,5 +62,7 @@ const heartsPhase = (state = gamePhases.GAME_START, action) => {
 export const isCurrentPhase = (state, phase) => {
   return phase === state;
 }
+
+export const getCurrentPhase = (state) => state;
 
 export default heartsPhase;

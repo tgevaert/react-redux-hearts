@@ -121,4 +121,5 @@ export const getCurrentTrickPointValue = (state) => fromHeartsTricks.getTrickPoi
 
 // Phase selectors
 export const isCurrentPhase = (state, phase) => fromHeartsPhases.isCurrentPhase(state.phase, phase);
+export const getCurrentPhase = (state) => fromHeartsPhases.getCurrentPhase(state.phase);
 export const gamePhases = fromHeartsPhases.gamePhases;

@@ -2,7 +2,7 @@ import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
 import * as fromPhases from './phases';
-import { getPlayers, getPlayerIDs, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isCurrentPhase, gamePhases, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete, isReadyToPass, getRoundNumber, getSelectedCards } from '../reducers';
+import { getPlayers, getPlayerIDs, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isCurrentPhase, gamePhases, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete, isReadyToPass, getRoundNumber, getSelectedCards, getCurrentPhase } from '../reducers';
 import aiPlayChoice, { aiPassChoice }  from '../ai/random';
 
 export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
@@ -48,21 +48,13 @@ const isValidMove = (state, playerID, card) => {
   return false;
 }
 
-const computerMove = () => {
+const computerMove = (currentPlayer) => {
   return (dispatch, getState) => {
     const state = getState();
-    if (isCurrentPhase(state, gamePhases.PASSING)) {
-      return Promise.resolve("Waiting for human to Pass!");
-    }
-    const currentPlayer = getCurrentPlayer(state);
-    if (currentPlayer.playerType === "Human") {
-      return Promise.resolve("Waiting for human.");
-    } else {
-      const nextCard = aiPlayChoice(state, currentPlayer.id);
-      return delayedPromise(MOVE_DELAY, () => dispatch(playCard(currentPlayer.id, nextCard)));
-    }
+    const nextCard = aiPlayChoice(state, currentPlayer.id);
+    return delayedPromise(MOVE_DELAY, () => dispatch(playCard(currentPlayer.id, nextCard)));
   }
-}
+};
 
 const computerSelectPassCard = (playerID) => {
   return (dispatch, getState) => {
@@ -82,6 +74,7 @@ const computerSelections = () => {
         dispatch(computerSelectPassCard(aiPlayers[p].id));
       }
     }
+    return Promise.resolve("Done Selections");
   }
 }
 
@@ -107,13 +100,11 @@ const passCards = () => {
       const selectedCards = getSelectedCards(state, playerIDs[i]);
       dispatch(fromPlayers.passCards(playerIDs[i], playerIDs[(i + playerIDs.length + pass) % playerIDs.length], selectedCards)); 
     }
-    
-    dispatch(fromPhases.startPlaying());
-    dispatch(gameTick());
+    return Promise.resolve("Cards Passed!");
   }
 }
 
-const gameTick = () => {
+const gameTickOld = () => {
   // Eventually the control loop will be:
   // Select Cards
   // Pass Cards
@@ -153,9 +144,7 @@ export const playCard = (playerID, card) => {
     if (getCurrentPlayerID(state) === playerID && isValidMove(state, playerID, card)) {
       // Play card, and tick over the game state
       dispatch(fromPlayers.playCard(playerID, card));
-      // If Playing local game, client must tick over game state, rather than wait for server action.
-      dispatch(gameTick());
-      return Promise.resolve("Played Card Success!");
+      return dispatch(gameTick());
     } else {
       // Invalid card or playing out of turn.
       return Promise.reject("Invalid Card Played.");
@@ -166,27 +155,83 @@ export const playCard = (playerID, card) => {
 const toggleCard = (playerID, card) => {
   return (dispatch, getState) => {
     dispatch(fromPlayers.toggleCard(playerID, card));
-    dispatch(gameTick());
+    return dispatch(gameTick());
   }
 }
 
 export const playOrToggleCard = (playerID, card) => {
   return (dispatch, getState) => {
-    if (isCurrentPhase(getState(), gamePhases.PASSING)) {
-      dispatch(toggleCard(playerID, card));
+    const state = getState();
+    if (isCurrentPhase(state, gamePhases.PASSING)) {
+      return dispatch(toggleCard(playerID, card));
+    } else if (isCurrentPhase(state, gamePhases.PLAYING)) {
+      return dispatch(playCard(playerID, card));
     } else {
-      dispatch(playCard(playerID, card)); 
+      return Promise.reject("I'm sorry we can't handle your click right now");
     }
   }
-}
+};
 
 export const newGame = () => {
   return (dispatch, getState) => {
     dispatch(fromRounds.newGame());
-    dispatch(deal());
-    dispatch(fromPhases.startPassing());
-    dispatch(computerSelections());
     dispatch(gameTick());
+  }
+};
+
+export const gameTick = () => {
+  return (dispatch, getState) => {
+    console.log("Game Tick");
+    const state = getState();
+    switch (getCurrentPhase(state)) {
+      case gamePhases.GAME_START:
+        dispatch(deal())
+          .then(dispatch(fromPhases.startRound()));
+      break;
+
+      case gamePhases.ROUND_START:
+        // Skip if hand is for holding.
+        dispatch(computerSelections())
+          .then(dispatch(fromPhases.startPassing()));
+      break;
+
+      case gamePhases.PASSING:
+        if (isReadyToPass(state)) {
+          dispatch(passCards())
+            .then(dispatch(fromPhases.startPlaying()));
+        } else {
+          return Promise.resolve("Waiting for cards to be selected");
+        }
+      break;
+
+      case gamePhases.PLAYING:
+        if (isTrickComplete(state)) {
+          dispatch(fromPhases.endTrick());
+        } else {
+          const currentPlayer = getCurrentPlayer(state);
+          if (currentPlayer.playerType === "AI") {
+            return dispatch(computerMove(currentPlayer));
+          } else {
+            return Promise.resolve("Waiting for human");
+          }
+        }
+      break;
+
+      case gamePhases.TRICK_END:
+        // Check if round end
+        return delayedPromise(MOVE_DELAY, () => dispatch(fromTricks.newTrick()));
+      break;
+
+      case gamePhases.TRICK_START:
+        dispatch(fromPhases.startPlaying());
+      break;
+      case gamePhases.NEW_ROUND:
+      case gamePhases.ROUND_END:
+      case gamePhases.GAME_END:
+      default:
+        return Promise.resolve("Nothing to do!");
+    }
+    return Promise.resolve(dispatch(gameTick()));
   }
 };
 
@@ -213,6 +258,8 @@ export const deal = () => {
     for (let d = 0; d < deckSize; d++) {
       dispatch(fromPlayers.dealCard(players[d % players.length].id, randomPop(deck)));
     }
+
+    return Promise.resolve("Finished Dealing");
   }
 };
 
