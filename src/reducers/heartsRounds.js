@@ -61,5 +61,6 @@ export const getCurrentTrick = (state) => fromHeartsTricks.getCurrentTrick(state
 export const getCurrentTrickSuit = (state) => fromHeartsTricks.getTrickSuit(getCurrentTrick(state));
 export const getPreviousTrick = (state) => fromHeartsTricks.getPreviousTrick(state[0].tricks);
 export const getRoundTrickHistory = (state) => fromHeartsTricks.getCompletedTricks(state[0].tricks);
+export const getRoundNumber = (state) => state.length;
 export const getCurrentWinnerID = (state) => fromHeartsTricks.getCurrentWinnerID(state[0].tricks);
 export default heartsRounds;

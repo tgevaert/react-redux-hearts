@@ -2,8 +2,8 @@ import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
 import * as fromPhases from './phases';
-import { getPlayers, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isCurrentPhase, gamePhases, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete } from '../reducers';
-import AIplayRandomCard from '../ai/random';
+import { getPlayers, getPlayerIDs, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isCurrentPhase, gamePhases, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete, isReadyToPass, getRoundNumber, getSelectedCards } from '../reducers';
+import aiPlayChoice, { aiPassChoice }  from '../ai/random';
 
 export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
 
@@ -51,12 +51,36 @@ const isValidMove = (state, playerID, card) => {
 const computerMove = () => {
   return (dispatch, getState) => {
     const state = getState();
+    if (isCurrentPhase(state, gamePhases.PASSING)) {
+      return Promise.resolve("Waiting for human to Pass!");
+    }
     const currentPlayer = getCurrentPlayer(state);
     if (currentPlayer.playerType === "Human") {
       return Promise.resolve("Waiting for human.");
     } else {
-      const nextCard = AIplayRandomCard(state, currentPlayer.id);
+      const nextCard = aiPlayChoice(state, currentPlayer.id);
       return delayedPromise(MOVE_DELAY, () => dispatch(playCard(currentPlayer.id, nextCard)));
+    }
+  }
+}
+
+const computerSelectPassCard = (playerID) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    let card = aiPassChoice(state, playerID);
+    dispatch(fromPlayers.toggleCard(playerID, card));
+  }
+}
+
+const computerSelections = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const players = getPlayers(state);
+    const aiPlayers = players.filter((p) => p.playerType === "AI");
+    for (let p = 0; p < aiPlayers.length; p++) {
+      for (let i = 0; i < 3; i++) {
+        dispatch(computerSelectPassCard(aiPlayers[p].id));
+      }
     }
   }
 }
@@ -66,13 +90,26 @@ const newRoundThunk = () => {
     dispatch(fromRounds.newRound());
     dispatch(deal());
     dispatch(fromPhases.startPassing());
+    dispatch(computerSelections());
     return Promise.resolve("New Round Dealt!");
   }
 }
 
-const gameOverMan = () => {
+const passCards = () => {
   return (dispatch, getState) => {
-    window.alert("Game over man!");
+    const state = getState();
+    const passDirections = [1, -1, 2, 0];
+    const roundN = getRoundNumber(state);
+    const pass = passDirections[roundN % passDirections.length];
+
+    const playerIDs = getPlayerIDs(state);
+    for (let i = 0; i < playerIDs.length; i++) {
+      const selectedCards = getSelectedCards(state, playerIDs[i]);
+      dispatch(fromPlayers.passCards(playerIDs[i], playerIDs[(i + playerIDs.length + pass) % playerIDs.length], selectedCards)); 
+    }
+    
+    dispatch(fromPhases.startPlaying());
+    dispatch(gameTick());
   }
 }
 
@@ -86,9 +123,15 @@ const gameTick = () => {
   // Complete Game
   return (dispatch, getState) => {
     const state = getState();
+    if (isCurrentPhase(state, gamePhases.PASSING)) {
+      if (isReadyToPass(state)) {
+        dispatch(passCards());
+      }
+      return;
+    }
+
     let nextAction = null;
     if (isGameComplete(state)) {
-      gameOverMan();
       return;
     } else if (isRoundComplete(state)) {
       nextAction = newRoundThunk;
@@ -142,6 +185,7 @@ export const newGame = () => {
     dispatch(fromRounds.newGame());
     dispatch(deal());
     dispatch(fromPhases.startPassing());
+    dispatch(computerSelections());
     dispatch(gameTick());
   }
 };

@@ -72,13 +72,29 @@ export const isGameComplete = (state) => {
   for (let roundScore of currentScores) {
     for (let s = 0; s < roundScore.length; s++) {
       sum[s] += roundScore[s];
-      if (sum[s] > 10) {
+      if (sum[s] > 100) {
         return true;
       }
     }
   }
   return false;
 };
+
+export const isReadyToPass = (state) => {
+  if (!isCurrentPhase(state, gamePhases.PASSING)) {
+    return false;
+  }
+
+  const playerIDs = getPlayerIDs(state);
+
+  for (let p = 0; p < playerIDs.length; p++) {
+    let selectedCards = getSelectedCards(state, playerIDs[p]);
+    if (selectedCards.length !== 3) {
+      return false;
+    }
+  }
+  return true;
+}
 
 // Player selectors
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
@@ -96,6 +112,7 @@ export const getCurrentTrickSuit = (state) => fromHeartsRounds.getCurrentTrickSu
 export const getPreviousTrick = (state) => fromHeartsRounds.getPreviousTrick(state.rounds);
 export const getCurrentWinnerID = (state) => fromHeartsRounds.getCurrentWinnerID(state.rounds);
 export const getRoundTrickHistory = (state) => fromHeartsRounds.getRoundTrickHistory(state.rounds);
+export const getRoundNumber = (state) => fromHeartsRounds.getRoundNumber(state.rounds);
 export const isHeartsBroken = (state) => fromHeartsRounds.isHeartsBroken(state.rounds);
 export const getScores = (state) => fromHeartsRounds.getScores(state.rounds, getPlayerIDs(state));
 
