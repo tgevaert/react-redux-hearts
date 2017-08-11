@@ -2,7 +2,7 @@ import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
 import * as fromPhases from './phases';
-import { getPlayers, getPlayerIDs, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isCurrentPhase, gamePhases, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete, isReadyToPass, getRoundNumber, getSelectedCards, getCurrentPhase } from '../reducers';
+import { getPlayers, getPlayerIDs, getCurrentPlayerID, getCurrentPlayer, playerHandContainsCard, playerHandContainsSuit, isPlayerHandOnlyHearts, getCurrentTrickSuit, isCurrentPhase, gamePhases, isHeartsBroken, isTrickComplete, isRoundComplete, isGameComplete, isReadyToPass, getPassDirection, getRoundNumber, getSelectedCards, getCurrentPhase } from '../reducers';
 import aiPlayChoice, { aiPassChoice }  from '../ai/random';
 
 export const addPlayer = (player, playerType = "Human") => fromPlayers.addPlayer(player, playerType);
@@ -91,9 +91,7 @@ const newRoundThunk = () => {
 const passCards = () => {
   return (dispatch, getState) => {
     const state = getState();
-    const passDirections = [1, -1, 2, 0];
-    const roundN = getRoundNumber(state);
-    const pass = passDirections[roundN % passDirections.length];
+    const pass = getPassDirection(state);
 
     const playerIDs = getPlayerIDs(state);
     for (let i = 0; i < playerIDs.length; i++) {
@@ -171,8 +169,8 @@ export const playOrToggleCard = (playerID, card) => {
       }
       resolve(dispatch(action(playerID, card)).then((resolved) => {
        console.log(resolved);
-       dispatch(gameTick());
-      }));
+       return dispatch(gameTick());
+      }, console.log));
     });
     return movePromise;
   };
@@ -196,10 +194,15 @@ export const gameTick = () => {
         break;
 
         case gamePhases.ROUND_START:
+          if (getPassDirection(state) === 0) {
           // Skip if hand is for holding.
+          resolve(dispatch(deal())
+            .then(() => dispatch(fromPhases.startPlaying())));
+          } else {
           resolve(dispatch(deal())
             .then(() => dispatch(computerSelections()))
             .then(() => dispatch(fromPhases.startPassing())));
+          }
         break;
 
         case gamePhases.PASSING:
@@ -251,7 +254,7 @@ export const gameTick = () => {
     });
     return nextTick.then((resolved) => { 
       console.log(resolved); 
-      dispatch(gameTick())
+      return dispatch(gameTick())
     }, console.log);
   }
 };

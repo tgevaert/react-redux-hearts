@@ -96,6 +96,12 @@ export const isReadyToPass = (state) => {
   return true;
 }
 
+export const getPassDirection = (state) => {
+  const roundNumber = getRoundNumber(state);
+  const passDirections = [0, 1, -1, 2];
+  return passDirections[roundNumber % passDirections.length];
+};
+
 // Player selectors
 export const getPlayers = (state) => fromHeartsPlayers.getPlayers(state.players);
 export const getPlayerIDs = (state) => fromHeartsPlayers.getPlayerIDs(state.players);
