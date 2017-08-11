@@ -83,7 +83,10 @@ const heartsPlayer = (state = {}, action) => {
       }
       return nextState;
     case NEW_GAME:
-      return Object.assign({}, state, {playerHand: playerHand(undefined, action)});
+      return Object.assign({}, state, {
+        playerHand: playerHand(undefined, action), 
+        selectedCards: selectedCards(undefined, action)
+      });
     case DEAL_CARD:
     case PLAY_CARD:
       if (state.id !== action.playerID) {
@@ -98,6 +101,9 @@ const heartsPlayer = (state = {}, action) => {
       nextState = Object.assign({}, state, {selectedCards: selectedCards(state.selectedCards, action)});
       return nextState;
     case PASS_CARDS:
+      if (action.fromPlayerID === action.toPlayerID) {
+        return state;
+      }
       if (action.fromPlayerID === state.id) {
         nextState = Object.assign({}, state, {
           selectedCards: selectedCards(undefined, action), 

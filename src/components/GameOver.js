@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isGameComplete } from '../reducers';
+import { gamePhases, getCurrentPhase } from '../reducers';
 
 const GameOverPresentation = ({gameOverClass, children}) => {
   return (
@@ -13,7 +13,7 @@ const GameOverPresentation = ({gameOverClass, children}) => {
 }
 
 const mapStateToProps = (state) => {
-  const gameOverClass = isGameComplete(state) ? "game-over" : "";
+  const gameOverClass = ( getCurrentPhase(state) === gamePhases.GAME_END ) ? "game-over" : "";
   return {
     gameOverClass: gameOverClass
   };

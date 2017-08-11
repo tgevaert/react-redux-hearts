@@ -78,16 +78,6 @@ const computerSelections = () => {
   }
 }
 
-const newRoundThunk = () => {
-  return (dispatch, getState) => {
-    dispatch(fromRounds.newRound());
-    dispatch(deal());
-    dispatch(fromPhases.startPassing());
-    dispatch(computerSelections());
-    return Promise.resolve("New Round Dealt!");
-  }
-}
-
 const passCards = () => {
   return (dispatch, getState) => {
     const state = getState();
@@ -99,40 +89,6 @@ const passCards = () => {
       dispatch(fromPlayers.passCards(playerIDs[i], playerIDs[(i + playerIDs.length + pass) % playerIDs.length], selectedCards)); 
     }
     return Promise.resolve("Cards Passed!");
-  }
-}
-
-const gameTickOld = () => {
-  // Eventually the control loop will be:
-  // Select Cards
-  // Pass Cards
-  // Play Card
-  // Complete Trick
-  // Complete Round
-  // Complete Game
-  return (dispatch, getState) => {
-    const state = getState();
-    if (isCurrentPhase(state, gamePhases.PASSING)) {
-      if (isReadyToPass(state)) {
-        dispatch(passCards());
-      }
-      return;
-    }
-
-    let nextAction = null;
-    if (isGameComplete(state)) {
-      return;
-    } else if (isRoundComplete(state)) {
-      nextAction = newRoundThunk;
-    } else if (isTrickComplete(state)) {
-      nextAction = fromTricks.newTrick;
-    } 
-
-    if (nextAction !== null) {
-      delayedPromise(MOVE_DELAY, () => dispatch(nextAction())).then(() => dispatch(computerMove()));
-    } else {
-      dispatch(computerMove());
-    }
   }
 }
 
@@ -190,7 +146,7 @@ export const gameTick = () => {
     let nextTick = new Promise((resolve, reject) => {
       switch (getCurrentPhase(state)) {
         case gamePhases.GAME_START:
-            resolve(delayedPromise(5000, () => dispatch(fromPhases.startRound())));
+            resolve(dispatch(fromPhases.startRound()));
         break;
 
         case gamePhases.ROUND_START:
@@ -229,9 +185,9 @@ export const gameTick = () => {
 
         case gamePhases.TRICK_END:
           if (isRoundComplete(state)) {
-            delayedPromise(MOVE_DELAY, () => resolve(dispatch(fromPhases.endRound())));
+            resolve(delayedPromise(MOVE_DELAY, () => dispatch(fromPhases.endRound())));
           } else {
-            delayedPromise(MOVE_DELAY, () => resolve(dispatch(fromTricks.newTrick())));
+            resolve(delayedPromise(MOVE_DELAY, () => dispatch(fromTricks.newTrick())));
           }
         break;
 
@@ -244,7 +200,11 @@ export const gameTick = () => {
         break;
 
         case gamePhases.ROUND_END:
-          resolve(dispatch(fromRounds.newRound()));
+          if (isGameComplete(state)) {
+            resolve(dispatch(fromPhases.endGame()));
+          } else {
+            resolve(dispatch(fromRounds.newRound()));
+          }
         break;
 
         case gamePhases.GAME_END:

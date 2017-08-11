@@ -23,7 +23,9 @@ const HeartsGamePresentation = ({players}) => {
             {playerComponents[0]}
           </div>
           <div className="game-board">
-            <CurrentTrick /> 
+            <div className="viewport">
+              <CurrentTrick /> 
+            </div>
           </div>
           <div className="east-player">
             {playerComponents[2]}

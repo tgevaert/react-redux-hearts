@@ -5,7 +5,7 @@
 
 @keyframes slidenorth {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(0px, -100%) }
+  100% { transform: translate(0px, -200%) }
 }
 
 @keyframes slideeast {
@@ -15,7 +15,7 @@
 
 @keyframes slidesouth {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(0px, 100%) }
+  100% { transform: translate(0px, 200%) }
 }
 
 body {
@@ -40,6 +40,10 @@ body {
   color: #E0E0E0;
 }
 
+/*.game-table, .north-player, .east-player, .south-player, .west-player, .column-flex, .game-board, .trick {
+  border: 1px solid black;
+}*/
+
 .column-flex {
   display: flex;
   align-items: center;
@@ -55,20 +59,31 @@ body {
   display: none;
 }
 
+.game-board {
+  flex: 4;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.viewport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (min-width: 768px) {
   .east-player, .west-player, .north-player {
     display: block;
   }
+
+  .game-board {
+  }
+
+  .viewport {
+    min-height: 500px;
+  }
 }
 
-
-.game-board {
-  height: 12em;
-  width: 12em;
-  margin: auto;
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
 
 td, th {
   text-align: right;
@@ -91,13 +106,56 @@ td, th {
   background: white;
 }
 
-.hand .card {
+.south-player .card, .north-player .card {
   margin-left: -0.1em;
   padding-left: 0.1em;
 }
 
-.hand .card:hover, .hand .card.toggled {
+.west-player .card {
+  font-size: 2em;
+  font-family: monospace;
+  cursor: pointer;
+  text-align: center;
+  direction: rtl;
+  display: block;
+  height: 1.8em;
+  width: 2.929em;
+  border: 1px solid black;
+  border-radius: 5px 10px;
+  background: white;
+  margin-top: -0.1em;
+  padding-top: 0.1em;
+}
+
+.east-player .card {
+  font-size: 2em;
+  font-family: monospace;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  height: 1.8em;
+  width: 2.929em;
+  border: 1px solid black;
+  border-radius: 5px 10px;
+  background: white;
+  margin-top: -0.1em;
+  padding-top: 0.1em;
+}
+
+.west-player .card:hover, .west-player .card.toggled {
+  transform: translate(0.25em, 0);
+}
+
+.south-player .card:hover, .south-player .card.toggled {
   transform: translate(0, -0.25em);
+}
+
+.east-player .card:hover, .east-player .card.toggled {
+  transform: translate(-0.25em, 0);
+}
+
+.north-player .card:hover, .north-player .card.toggled {
+  transform: translate(0, 0.25em);
 }
 
 .hand .card:hover {
@@ -110,8 +168,7 @@ td, th {
 
 .trick {
   position: relative;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   height: 12em;
   width: 12em;
 }
@@ -126,6 +183,10 @@ td, th {
   margin-right: auto;
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.slide, .slide-out-west, .slide-out-north, .slide-out-east, .slide-out-south {
+  flex: 1;
 }
 
 .slide-out-west {
