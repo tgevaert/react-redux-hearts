@@ -143,8 +143,7 @@ export const playCard = (playerID, card) => {
     const state = getState();
     if (getCurrentPlayerID(state) === playerID && isValidMove(state, playerID, card)) {
       // Play card, and tick over the game state
-      dispatch(fromPlayers.playCard(playerID, card));
-      return dispatch(gameTick());
+      return Promise.resolve(dispatch(fromPlayers.playCard(playerID, card)));
     } else {
       // Invalid card or playing out of turn.
       return Promise.reject("Invalid Card Played.");
@@ -154,22 +153,29 @@ export const playCard = (playerID, card) => {
 
 const toggleCard = (playerID, card) => {
   return (dispatch, getState) => {
-    dispatch(fromPlayers.toggleCard(playerID, card));
-    return dispatch(gameTick());
+    return Promise.resolve(dispatch(fromPlayers.toggleCard(playerID, card)));
   }
 }
 
 export const playOrToggleCard = (playerID, card) => {
   return (dispatch, getState) => {
     const state = getState();
-    if (isCurrentPhase(state, gamePhases.PASSING)) {
-      return dispatch(toggleCard(playerID, card));
-    } else if (isCurrentPhase(state, gamePhases.PLAYING)) {
-      return dispatch(playCard(playerID, card));
-    } else {
-      return Promise.reject("I'm sorry we can't handle your click right now");
-    }
-  }
+    const movePromise = new Promise((resolve, reject) => {
+      let action = null;
+      if (isCurrentPhase(state, gamePhases.PASSING)) {
+        action = toggleCard;
+      } else if (isCurrentPhase(state, gamePhases.PLAYING)) {
+        action = playCard;
+      } else {
+        reject("I'm sorry we can't handle your click right now");
+      }
+      resolve(dispatch(action(playerID, card)).then((resolved) => {
+       console.log(resolved);
+       dispatch(gameTick());
+      }));
+    });
+    return movePromise;
+  };
 };
 
 export const newGame = () => {
@@ -183,55 +189,70 @@ export const gameTick = () => {
   return (dispatch, getState) => {
     console.log("Game Tick");
     const state = getState();
-    switch (getCurrentPhase(state)) {
-      case gamePhases.GAME_START:
-        dispatch(deal())
-          .then(dispatch(fromPhases.startRound()));
-      break;
+    let nextTick = new Promise((resolve, reject) => {
+      switch (getCurrentPhase(state)) {
+        case gamePhases.GAME_START:
+            resolve(delayedPromise(5000, () => dispatch(fromPhases.startRound())));
+        break;
 
-      case gamePhases.ROUND_START:
-        // Skip if hand is for holding.
-        dispatch(computerSelections())
-          .then(dispatch(fromPhases.startPassing()));
-      break;
+        case gamePhases.ROUND_START:
+          // Skip if hand is for holding.
+          resolve(dispatch(deal())
+            .then(() => dispatch(computerSelections()))
+            .then(() => dispatch(fromPhases.startPassing())));
+        break;
 
-      case gamePhases.PASSING:
-        if (isReadyToPass(state)) {
-          dispatch(passCards())
-            .then(dispatch(fromPhases.startPlaying()));
-        } else {
-          return Promise.resolve("Waiting for cards to be selected");
-        }
-      break;
-
-      case gamePhases.PLAYING:
-        if (isTrickComplete(state)) {
-          dispatch(fromPhases.endTrick());
-        } else {
-          const currentPlayer = getCurrentPlayer(state);
-          if (currentPlayer.playerType === "AI") {
-            return dispatch(computerMove(currentPlayer));
+        case gamePhases.PASSING:
+          if (isReadyToPass(state)) {
+            resolve(dispatch(passCards())
+              .then(() => dispatch(fromPhases.startPlaying())));
           } else {
-            return Promise.resolve("Waiting for human");
+            reject("Waiting for cards to be selected");
           }
-        }
-      break;
+        break;
 
-      case gamePhases.TRICK_END:
-        // Check if round end
-        return delayedPromise(MOVE_DELAY, () => dispatch(fromTricks.newTrick()));
-      break;
+        case gamePhases.PLAYING:
+          if (isTrickComplete(state)) {
+            resolve(dispatch(fromPhases.endTrick()));
+          } else {
+            const currentPlayer = getCurrentPlayer(state);
+            if (currentPlayer.playerType === "AI") {
+              resolve(dispatch(computerMove(currentPlayer)));
+            } else {
+              reject("Waiting for human");
+            }
+          }
+        break;
 
-      case gamePhases.TRICK_START:
-        dispatch(fromPhases.startPlaying());
-      break;
-      case gamePhases.NEW_ROUND:
-      case gamePhases.ROUND_END:
-      case gamePhases.GAME_END:
-      default:
-        return Promise.resolve("Nothing to do!");
-    }
-    return Promise.resolve(dispatch(gameTick()));
+        case gamePhases.TRICK_END:
+          if (isRoundComplete(state)) {
+            delayedPromise(MOVE_DELAY, () => resolve(dispatch(fromPhases.endRound())));
+          } else {
+            delayedPromise(MOVE_DELAY, () => resolve(dispatch(fromTricks.newTrick())));
+          }
+        break;
+
+        case gamePhases.TRICK_START:
+          resolve(dispatch(fromPhases.startPlaying()));
+        break;
+
+        case gamePhases.ROUND_NEW:
+          resolve(dispatch(fromPhases.startRound()));
+        break;
+
+        case gamePhases.ROUND_END:
+          resolve(dispatch(fromRounds.newRound()));
+        break;
+
+        case gamePhases.GAME_END:
+        default:
+          return reject("Nothing to do!");
+      }
+    });
+    return nextTick.then((resolved) => { 
+      console.log(resolved); 
+      dispatch(gameTick())
+    }, console.log);
   }
 };
 
