@@ -67,7 +67,7 @@ body {
   border-radius: 0.3em;
 }
 
-.north-player, .south-player {
+.south-player {
   flex: 0 0 auto;
 }
 
@@ -76,10 +76,9 @@ body {
 }*/
 
 .row-flex {
-  flex: 1 1 80%;
+  flex: 1 0 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
 }
 
 .east-player, .west-player, .north-player {
@@ -88,19 +87,26 @@ body {
 
 .game-board {
   flex: 1 0 0;
+  display: flex;
+  align-items: stretch;
   overflow-x: hidden;
   overflow-y: hidden;
 }
 
 .viewport {
+  flex: 1 0 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
 }
 
 @media (min-width: 768px) {
   .east-player, .west-player, .north-player {
     display: block;
+    flex: 0 0 auto;
+  }
+
+  .north-player {
+    flex: 0 0 auto;
   }
 
   .game-board {
@@ -217,7 +223,9 @@ td, th {
 }
 
 .slide, .slide-out-west, .slide-out-north, .slide-out-east, .slide-out-south {
-  flex: 1;
+  flex: 1 0 0;
+  display: flex;
+  align-items: center;
 }
 
 .slide-out-west {
