@@ -3,19 +3,23 @@ import { connect } from 'react-redux';
 import { PlayerHand } from './PlayerHand';
 import { getPlayers, getCurrentPlayerID, isTrickComplete } from '../reducers';
 
-const Player = ({player, isCurrentPlayer}) => {
-  const className = "player" + (isCurrentPlayer ? " player-current" : "");
-  
+const Player = ({ player, isCurrentPlayer }) => {
+  const className = 'player' + (isCurrentPlayer ? ' player-current' : '');
+
   return (
     <div className={className}>
-      <li>{player.name}</li>
+      <li>
+        {player.name}
+      </li>
       <PlayerHand player={player} />
     </div>
-  )
-}
+  );
+};
 
-const Players = ({players, currentPlayerID}) => {
-  const playerElements = players.map(p => <Player isCurrentPlayer={p.id === currentPlayerID} key={p.id} player={p} />);
+const Players = ({ players, currentPlayerID }) => {
+  const playerElements = players.map(p =>
+    <Player isCurrentPlayer={p.id === currentPlayerID} key={p.id} player={p} />
+  );
 
   return (
     <div>
@@ -24,9 +28,9 @@ const Players = ({players, currentPlayerID}) => {
       </ul>
     </div>
   );
-}
+};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   players: getPlayers(state),
   currentPlayerID: isTrickComplete(state) ? null : getCurrentPlayerID(state)
 });

@@ -2,34 +2,34 @@ import heartsTricks, * as fromHeartsTricks from './heartsTricks';
 
 // Action Types
 
-export const NEW_ROUND = "NEW_ROUND";
-export const NEW_GAME = "NEW_GAME";
+export const NEW_ROUND = 'NEW_ROUND';
+export const NEW_GAME = 'NEW_GAME';
 
 // Reducers
 
 const heartsRound = (state = {}, action) => {
   return {
-    tricks: heartsTricks(state.tricks, action),
-  }
-}
+    tricks: heartsTricks(state.tricks, action)
+  };
+};
 
 const heartsRounds = (state = [], action) => {
   switch (action.type) {
     case NEW_ROUND:
-      return [heartsRound(undefined, action), ...state]
+      return [heartsRound(undefined, action), ...state];
     case NEW_GAME:
-      return [heartsRound(undefined, action)]
+      return [heartsRound(undefined, action)];
     default:
-      return [].concat(heartsRound(state[0], action), ...state.slice(1))
+      return [].concat(heartsRound(state[0], action), ...state.slice(1));
   }
 };
 
 // Selectors
 
-export const isHeartsBroken = (state) => {
+export const isHeartsBroken = state => {
   for (let trick of getRoundTrickHistory(state)) {
     for (let move of trick) {
-      if (move.card.suit === "H") {
+      if (move.card.suit === 'H') {
         return true;
       }
     }
@@ -62,10 +62,15 @@ export const getScores = (state, playerIDs) => {
   return scores;
 };
 
-export const getCurrentTrick = (state) => fromHeartsTricks.getCurrentTrick(state[0].tricks);
-export const getCurrentTrickSuit = (state) => fromHeartsTricks.getTrickSuit(getCurrentTrick(state));
-export const getPreviousTrick = (state) => fromHeartsTricks.getPreviousTrick(state[0].tricks);
-export const getRoundTrickHistory = (state) => fromHeartsTricks.getCompletedTricks(state[0].tricks);
-export const getRoundNumber = (state) => state.length;
-export const getCurrentWinnerID = (state) => fromHeartsTricks.getCurrentWinnerID(state[0].tricks);
+export const getCurrentTrick = state =>
+  fromHeartsTricks.getCurrentTrick(state[0].tricks);
+export const getCurrentTrickSuit = state =>
+  fromHeartsTricks.getTrickSuit(getCurrentTrick(state));
+export const getPreviousTrick = state =>
+  fromHeartsTricks.getPreviousTrick(state[0].tricks);
+export const getRoundTrickHistory = state =>
+  fromHeartsTricks.getCompletedTricks(state[0].tricks);
+export const getRoundNumber = state => state.length;
+export const getCurrentWinnerID = state =>
+  fromHeartsTricks.getCurrentWinnerID(state[0].tricks);
 export default heartsRounds;

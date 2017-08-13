@@ -12,11 +12,15 @@ import 'core-js/fn/array/find';
 import 'core-js/fn/array/find-index';
 
 const heartsStore = heartsCreateStore();
-const render = () => ReactDOMRender(<HeartsApp store={heartsStore} />, document.getElementById('root'));
-heartsStore.dispatch(heartsActions.addPlayer("Bob", "AI"));
-heartsStore.dispatch(heartsActions.addPlayer("Doug", "AI"));
-heartsStore.dispatch(heartsActions.addPlayer("Bill", "AI"));
-heartsStore.dispatch(heartsActions.addPlayer("Tim", "Human"));
+const render = () =>
+  ReactDOMRender(
+    <HeartsApp store={heartsStore} />,
+    document.getElementById('root')
+  );
+heartsStore.dispatch(heartsActions.addPlayer('Bob', 'AI'));
+heartsStore.dispatch(heartsActions.addPlayer('Doug', 'AI'));
+heartsStore.dispatch(heartsActions.addPlayer('Bill', 'AI'));
+heartsStore.dispatch(heartsActions.addPlayer('Tim', 'Human'));
 heartsStore.dispatch(heartsActions.newGame());
 heartsStore.subscribe(render);
 render();

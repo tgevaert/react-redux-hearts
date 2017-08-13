@@ -1,7 +1,13 @@
 import { v4 as uuidV4 } from 'uuid';
-import { ADD_PLAYER, DEAL_CARD, PLAY_CARD, TOGGLE_CARD, PASS_CARDS }  from '../reducers/heartsPlayers'
+import {
+  ADD_PLAYER,
+  DEAL_CARD,
+  PLAY_CARD,
+  TOGGLE_CARD,
+  PASS_CARDS
+} from '../reducers/heartsPlayers';
 
-export const addPlayer = (name, playerType = "Human") => ({
+export const addPlayer = (name, playerType = 'Human') => ({
   type: ADD_PLAYER,
   id: uuidV4(),
   name: name,

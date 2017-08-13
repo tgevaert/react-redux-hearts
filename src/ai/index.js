@@ -1,12 +1,22 @@
-import { getCurrentTrick, getPlayerHand, getCurrentTrickSuit, getCurrentTrickValue, playerHandContainsSuit, isHeartsBroken } from '../reducers'
+import {
+  getCurrentTrick,
+  getPlayerHand,
+  getCurrentTrickSuit,
+  getCurrentTrickValue,
+  playerHandContainsSuit,
+  isHeartsBroken
+} from '../reducers';
 import { constants as heartsConstants } from '../heartsRules';
 
-const cardCost = (card) => {
+const cardCost = card => {
   // Cost of keeping a card
   // Higher cost implies that the card is more likely to result in winning points
   // Keeping a Q of Spades is bad.  Keeping an A of hearts is bad.  Keeping a 2 of Clubs is good.
-  return heartsConstants.cardValues[card.value].rank + heartsConstants.pointValue(card);
-}
+  return (
+    heartsConstants.cardValues[card.value].rank +
+    heartsConstants.pointValue(card)
+  );
+};
 
 export const AIplayCard = (state, playerID) => {
   const hand = getPlayerHand(state);
@@ -19,7 +29,9 @@ export const AIplayCard = (state, playerID) => {
   let cardPool = [];
 
   if (followSuit) {
-    cardPool = hand.filter((card) => { return card.suit === suit; });
+    cardPool = hand.filter(card => {
+      return card.suit === suit;
+    });
   } else {
     cardPool = hand;
   }
@@ -28,4 +40,4 @@ export const AIplayCard = (state, playerID) => {
   }
 
   return bestCard;
-}
+};

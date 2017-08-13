@@ -1,39 +1,49 @@
-import { constants as  heartsConstants } from '../heartsRules';
+import { constants as heartsConstants } from '../heartsRules';
 
 // Actions
 import { NEW_GAME } from './heartsRounds';
-export const ADD_PLAYER = "ADD_PLAYER";
-export const DEAL_CARD = "DEAL_CARD";
-export const PLAY_CARD = "PLAY_CARD";
-export const TOGGLE_CARD = "TOGGLE_CARD";
-export const PASS_CARDS = "PASS_CARDS";
+export const ADD_PLAYER = 'ADD_PLAYER';
+export const DEAL_CARD = 'DEAL_CARD';
+export const PLAY_CARD = 'PLAY_CARD';
+export const TOGGLE_CARD = 'TOGGLE_CARD';
+export const PASS_CARDS = 'PASS_CARDS';
 
 // Reducers
 const selectedCards = (state = [], action) => {
   switch (action.type) {
-    case TOGGLE_CARD: 
-      const idx = state.findIndex(card => (card.value === action.card.value && card.suit === action.card.suit));
+    case TOGGLE_CARD:
+      const idx = state.findIndex(
+        card =>
+          card.value === action.card.value && card.suit === action.card.suit
+      );
       if (idx > -1) {
-        return [].concat(state.slice(0, idx), state.slice(idx+1));
+        return [].concat(state.slice(0, idx), state.slice(idx + 1));
       } else {
         return [...state, action.card];
       }
     default:
       return state;
   }
-}
+};
 
 const addCard = (cards, c) => {
   let sortIndex = 0;
   const newCardRank = heartsConstants.cardRank(c);
-  for (sortIndex = 0; sortIndex < cards.length && newCardRank > heartsConstants.cardRank(cards[sortIndex]); sortIndex++) {}
+  for (
+    sortIndex = 0;
+    sortIndex < cards.length &&
+    newCardRank > heartsConstants.cardRank(cards[sortIndex]);
+    sortIndex++
+  ) {}
   return [...cards.slice(0, sortIndex), c, ...cards.slice(sortIndex)];
 };
 
 const removeCard = (cards, c) => {
-  const idx = cards.findIndex(card => (card.value === c.value && card.suit === c.suit));
+  const idx = cards.findIndex(
+    card => card.value === c.value && card.suit === c.suit
+  );
   if (idx > -1) {
-    return [].concat(cards.slice(0, idx), cards.slice(idx+1));
+    return [].concat(cards.slice(0, idx), cards.slice(idx + 1));
   } else {
     return cards;
   }
@@ -50,7 +60,9 @@ const playerHand = (state = [], action) => {
       let containsNoCards = true;
       let idx = null;
       for (let card of action.cards) {
-        idx = state.findIndex(c => (card.value === c.value && card.suit === c.suit));
+        idx = state.findIndex(
+          c => card.value === c.value && card.suit === c.suit
+        );
         if (idx > -1) {
           containsAllCards *= true;
           containsNoCards = false;
@@ -75,30 +87,34 @@ const heartsPlayer = (state = {}, action) => {
   switch (action.type) {
     case ADD_PLAYER:
       nextState = {
-        id: action.id, 
-        name: action.name, 
-        playerType: action.playerType, 
+        id: action.id,
+        name: action.name,
+        playerType: action.playerType,
         playerHand: playerHand(undefined, action),
         selectedCards: selectedCards(undefined, action)
-      }
+      };
       return nextState;
     case NEW_GAME:
       return Object.assign({}, state, {
-        playerHand: playerHand(undefined, action), 
+        playerHand: playerHand(undefined, action),
         selectedCards: selectedCards(undefined, action)
       });
     case DEAL_CARD:
     case PLAY_CARD:
       if (state.id !== action.playerID) {
-        return state
+        return state;
       }
-      nextState = Object.assign({}, state, {playerHand: playerHand(state.playerHand, action)});
+      nextState = Object.assign({}, state, {
+        playerHand: playerHand(state.playerHand, action)
+      });
       return nextState;
     case TOGGLE_CARD:
       if (state.id !== action.playerID) {
-        return state
+        return state;
       }
-      nextState = Object.assign({}, state, {selectedCards: selectedCards(state.selectedCards, action)});
+      nextState = Object.assign({}, state, {
+        selectedCards: selectedCards(state.selectedCards, action)
+      });
       return nextState;
     case PASS_CARDS:
       if (action.fromPlayerID === action.toPlayerID) {
@@ -106,7 +122,7 @@ const heartsPlayer = (state = {}, action) => {
       }
       if (action.fromPlayerID === state.id) {
         nextState = Object.assign({}, state, {
-          selectedCards: selectedCards(undefined, action), 
+          selectedCards: selectedCards(undefined, action),
           playerHand: playerHand(state.playerHand, action)
         });
         return nextState;
@@ -138,24 +154,24 @@ const heartsPlayers = (state = [], action) => {
     default:
       return state;
   }
-}
+};
 
 // Selectors
 
 export const getPlayerByID = (state, playerID) => {
   if (state === undefined) {
-    throw new Error("State is not defined..");
-  };
+    throw new Error('State is not defined..');
+  }
   if (state.find === undefined) {
-    throw new Error("State is not an array..? " + JSON.stringify(state));
-  };
+    throw new Error('State is not an array..? ' + JSON.stringify(state));
+  }
   return state.find(player => player.id === playerID);
-}
+};
 
 export default heartsPlayers;
 
-export const getPlayers = (state) => state;
-export const getPlayerIDs = (state) => state.map(player => player.id);
+export const getPlayers = state => state;
+export const getPlayerIDs = state => state.map(player => player.id);
 export const getPlayerHand = (state, playerID) => {
   const player = getPlayerByID(state, playerID);
   return player.playerHand;
@@ -164,7 +180,7 @@ export const getPlayerHand = (state, playerID) => {
 export const getSelectedCards = (state, playerID) => {
   const player = getPlayerByID(state, playerID);
   return player.selectedCards;
-}
+};
 
 export const playerHandContainsCard = (state, playerID, card) => {
   const playerHand = getPlayerHand(state, playerID);
@@ -189,7 +205,7 @@ export const playerHandContainsSuit = (state, playerID, suit) => {
 export const isPlayerHandOnlyHearts = (state, playerID) => {
   const playerHand = getPlayerHand(state, playerID);
   for (let card of playerHand) {
-    if (card.suit !== "H") {
+    if (card.suit !== 'H') {
       return false;
     }
   }

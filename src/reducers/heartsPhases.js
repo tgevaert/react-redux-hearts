@@ -2,9 +2,9 @@
 import { NEW_GAME, NEW_ROUND } from './heartsRounds';
 import { NEW_TRICK } from './heartsTricks';
 import { PLAY_CARD } from './heartsPlayers';
-export const SET_PHASE = "SET_PHASE";
+export const SET_PHASE = 'SET_PHASE';
 
-// GAME_START: 
+// GAME_START:
 //  Add Players
 //  Fix Deck Size
 // ROUND_START:
@@ -21,18 +21,18 @@ export const SET_PHASE = "SET_PHASE";
 // GAME_END:
 //  Display scores
 //  New Game
-// 
+//
 
 export const gamePhases = {
-  GAME_START: "GAME_START",
-  GAME_END: "GAME_END",
-  ROUND_NEW: "ROUND_NEW",
-  ROUND_START: "ROUND_START",
-  ROUND_END: "ROUND_END",
-  TRICK_START: "TRICK_START",
-  TRICK_END: "TRICK_END",
-  PASSING: "PASSING",
-  PLAYING: "PLAYING",
+  GAME_START: 'GAME_START',
+  GAME_END: 'GAME_END',
+  ROUND_NEW: 'ROUND_NEW',
+  ROUND_START: 'ROUND_START',
+  ROUND_END: 'ROUND_END',
+  TRICK_START: 'TRICK_START',
+  TRICK_END: 'TRICK_END',
+  PASSING: 'PASSING',
+  PLAYING: 'PLAYING'
 };
 
 // Reducers
@@ -53,16 +53,16 @@ const heartsPhase = (state = gamePhases.GAME_START, action) => {
     case NEW_TRICK:
       return gamePhases.TRICK_START;
     default:
-    return state;
+      return state;
   }
-}
+};
 
 // Selectors
 
 export const isCurrentPhase = (state, phase) => {
   return phase === state;
-}
+};
 
-export const getCurrentPhase = (state) => state;
+export const getCurrentPhase = state => state;
 
 export default heartsPhase;
