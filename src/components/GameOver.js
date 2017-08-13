@@ -13,7 +13,7 @@ const GameOverPresentation = ({gameOverClass, children}) => {
 }
 
 const mapStateToProps = (state) => {
-  const gameOverClass = ( getCurrentPhase(state) === gamePhases.GAME_END ) ? "game-over" : "";
+  const gameOverClass = "game-over " + ( getCurrentPhase(state) === gamePhases.GAME_END );
   return {
     gameOverClass: gameOverClass
   };

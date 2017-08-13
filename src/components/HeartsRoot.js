@@ -14,15 +14,16 @@ const GameTitle = ({title}) => {
 
 const HeartsRoot = () => {
   return (
-    <div>
-      <GameTitle title="Hearts" />
-      <div className="jumbotron">
-        <HeartsGame />
-        <GameOver>
-          <DealButton />
-          <Score />
-        </GameOver>
+    <div className="heartsRootContainer">
+      <div className="nav">
+        <GameTitle title="Hearts" />
+        <div className="nav-right"><a href="http://github.com/tgevaert/react-redux-hearts">Github</a></div>
       </div>
+      <GameOver>
+        <DealButton />
+        <Score />
+      </GameOver>
+      <HeartsGame />
     </div>
   );
 }

@@ -5,7 +5,7 @@
 
 @keyframes slidenorth {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(0px, -200%) }
+  100% { transform: translate(0px, -100%) }
 }
 
 @keyframes slideeast {
@@ -15,7 +15,12 @@
 
 @keyframes slidesouth {
   0% { transform: translate(0px, 0px) }
-  100% { transform: translate(0px, 200%) }
+  100% { transform: translate(0px, 100%) }
+}
+
+html, body, #root, .heartsRoot, .heartsRootContainer {
+  height: 100%;
+  margin: 0px;
 }
 
 body {
@@ -25,12 +30,15 @@ body {
   background-color: #212121;
 }
 
-.jumbotron {
-  background-color: rgba(66, 66, 66, 0.9);
-  border-radius: 0.3em;
+.heartsRootContainer {
+  display: flex;
+  flex-direction: column;
 }
 
-.game-title {
+.nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
   background-color: rgba(66, 66, 66, 0.9);
   border-radius: 0.3em;
 }
@@ -40,19 +48,38 @@ body {
   color: #E0E0E0;
 }
 
+.nav-right {
+  margin-left: auto;
+}
+
+.game-over {
+  flex: 0 0 auto;
+  background-color: grey;
+}
+
+
+.game-table {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: rgba(66, 66, 66, 0.9);
+  border-radius: 0.3em;
+}
+
+.north-player, .south-player {
+  flex: 0 0 auto;
+}
+
 /*.game-table, .north-player, .east-player, .south-player, .west-player, .column-flex, .game-board, .trick {
   border: 1px solid black;
 }*/
 
-.column-flex {
+.row-flex {
+  flex: 1 1 80%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.north-player, .south-player {
-  margin: auto;
-  text-align: center;
 }
 
 .east-player, .west-player, .north-player {
@@ -60,7 +87,7 @@ body {
 }
 
 .game-board {
-  flex: 4;
+  flex: 1 0 0;
   overflow-x: hidden;
   overflow-y: hidden;
 }
@@ -80,7 +107,6 @@ body {
   }
 
   .viewport {
-    min-height: 500px;
   }
 }
 
@@ -104,6 +130,7 @@ td, th {
   border: 1px solid black;
   border-radius: 5px 10px;
   background: white;
+  box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
 }
 
 .south-player .card, .north-player .card {
@@ -156,6 +183,10 @@ td, th {
 
 .north-player .card:hover, .north-player .card.toggled {
   transform: translate(0, 0.25em);
+}
+
+.hand {
+  text-align: center;
 }
 
 .hand .card:hover {
@@ -242,7 +273,7 @@ td, th {
   left: -2.5em;
 }
 
-.game-over {
+.game-over.true {
   position: fixed;
   top: 0;
   left: 0;
@@ -251,7 +282,7 @@ td, th {
   background: rgba(10,10,10,0.3);
 }
 
-.game-over div {
+.game-over.true div {
   position: relative;
   top: 25%;
   height: 50%;

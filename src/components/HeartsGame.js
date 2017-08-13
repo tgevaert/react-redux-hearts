@@ -18,7 +18,7 @@ const HeartsGamePresentation = ({players}) => {
         <div className="north-player">
           {playerComponents[1]}
         </div>
-        <div className="column-flex">
+        <div className="row-flex">
           <div className="west-player">
             {playerComponents[0]}
           </div>
