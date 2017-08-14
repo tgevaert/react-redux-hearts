@@ -17,11 +17,6 @@ const render = () =>
     <HeartsApp store={heartsStore} />,
     document.getElementById('root')
   );
-heartsStore.dispatch(heartsActions.addPlayer('Bob', 'AI'));
-heartsStore.dispatch(heartsActions.addPlayer('Doug', 'AI'));
-heartsStore.dispatch(heartsActions.addPlayer('Bill', 'AI'));
-heartsStore.dispatch(heartsActions.addPlayer('Tim', 'Human'));
-heartsStore.dispatch(heartsActions.newGame());
 heartsStore.subscribe(render);
-render();
+heartsStore.dispatch(heartsActions.gameTick());
 registerServiceWorker();

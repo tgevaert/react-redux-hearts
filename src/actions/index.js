@@ -180,6 +180,13 @@ export const gameTick = () => {
     let nextTick = new Promise((resolve, reject) => {
       switch (getCurrentPhase(state)) {
         case gamePhases.GAME_START:
+          const playerIDs = getPlayers(state);
+          if (playerIDs.length === 0) {
+            dispatch(addPlayer('Bob', 'AI'));
+            dispatch(addPlayer('Doug', 'AI'));
+            dispatch(addPlayer('Bill', 'AI'));
+            dispatch(addPlayer('You', 'Human'));
+          }
           resolve(dispatch(fromPhases.startRound()));
           break;
 
