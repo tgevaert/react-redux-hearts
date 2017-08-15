@@ -57,6 +57,37 @@ body {
   background-color: grey;
 }
 
+.graph {
+  display: flex;
+}
+
+.graph .labels {
+  flex: 0 0 auto;
+  padding: 3px;
+  color: #E0E0E0;
+  background-color: rgba(66, 66, 66, 0.9);
+}
+
+.graph .bars {
+  flex: 1 0 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.graph.row {
+  flex: 1 0 100%;
+}
+
+.graph.row.bar {
+  flex-grow: 0;
+  flex-shrink: 0;
+  transition: 0.5s;
+}
+
+.graph.row.blank {
+  flex: 1 0 0;
+  background-color: rgba(66, 66, 66, 0.9);
+}
 
 .game-table {
   flex: 1 0 0;
@@ -67,11 +98,11 @@ body {
   border-radius: 0.3em;
 }
 
-.south-player {
+.player.south {
   flex: 0 0 auto;
 }
 
-/*.game-table, .north-player, .east-player, .south-player, .west-player, .column-flex, .game-board, .trick {
+/*.game-table, .player.north, .player.east, .player.south, .player.west, .column-flex, .game-board, .trick {
   border: 1px solid black;
 }*/
 
@@ -81,7 +112,12 @@ body {
   align-items: stretch;
 }
 
-.east-player, .west-player, .north-player {
+.player {
+  text-align: center;
+  color: #E0E0E0;
+}
+
+.player.east .hand, .player.west .hand, .player.north .hand {
   display: none;
 }
 
@@ -99,13 +135,29 @@ body {
   align-items: stretch;
 }
 
-@media (min-width: 768px) {
-  .east-player, .west-player, .north-player {
-    display: block;
-    flex: 0 0 auto;
-  }
+.player {
+  flex: 0 0 auto;
+}
 
-  .north-player {
+.toast {
+  text-align: center;
+  color: #E0E0E0;
+  min-height: 20px;
+}
+
+.player.west, .player.east {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.player .name {
+  flex: 0 0 auto;
+}
+
+@media (min-width: 768px) {
+  .player.east .hand, .player.west .hand, .player.north .hand{
+    display: block;
     flex: 0 0 auto;
   }
 
@@ -139,12 +191,12 @@ td, th {
   box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
 }
 
-.south-player .card, .north-player .card {
+.player.south .card, .player.north .card {
   margin-left: -0.1em;
   padding-left: 0.1em;
 }
 
-.west-player .card {
+.player.west .card {
   font-size: 2em;
   font-family: monospace;
   cursor: pointer;
@@ -160,7 +212,7 @@ td, th {
   padding-top: 0.1em;
 }
 
-.east-player .card {
+.player.east .card {
   font-size: 2em;
   font-family: monospace;
   cursor: pointer;
@@ -175,19 +227,19 @@ td, th {
   padding-top: 0.1em;
 }
 
-.west-player .card:hover, .west-player .card.toggled {
+.player.west .card:hover, .player.west .card.toggled {
   transform: translate(0.25em, 0);
 }
 
-.south-player .card:hover, .south-player .card.toggled {
+.player.south .card:hover, .player.south .card.toggled {
   transform: translate(0, -0.25em);
 }
 
-.east-player .card:hover, .east-player .card.toggled {
+.player.east .card:hover, .player.east .card.toggled {
   transform: translate(-0.25em, 0);
 }
 
-.north-player .card:hover, .north-player .card.toggled {
+.player.north .card:hover, .player.north .card.toggled {
   transform: translate(0, 0.25em);
 }
 

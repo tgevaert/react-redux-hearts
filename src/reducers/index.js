@@ -65,20 +65,27 @@ export const isTrickComplete = state => {
   return false;
 };
 
+export const getScoreTotals = (state) => {
+  const currentScores = getScores(state);
+  let sum = [...currentScores[0]].fill(0);
+  for (let roundScore of currentScores) {
+    for (let s = 0; s < roundScore.length; s++) {
+      sum[s] += roundScore[s];
+    }
+  }
+  return sum;
+}
+
 export const isGameComplete = state => {
   // First check if round is complete..
   if (!isRoundComplete(state)) {
     return false;
   }
   // Check cumulate score for each player.  Return true when scores reach above 100
-  const currentScores = getScores(state);
-  let sum = [...currentScores[0]].fill(0);
-  for (let roundScore of currentScores) {
-    for (let s = 0; s < roundScore.length; s++) {
-      sum[s] += roundScore[s];
-      if (sum[s] > 100) {
-        return true;
-      }
+  const scoreTotals = getScoreTotals(state);
+  for (let s = 0; s < scoreTotals.length; s++) {
+    if (scoreTotals[s] > 100) {
+      return true;
     }
   }
   return false;
@@ -105,6 +112,22 @@ export const getPassDirection = state => {
   const passDirections = [0, 1, -1, 2];
   return passDirections[roundNumber % passDirections.length];
 };
+
+export const getToast = (state) => {
+  switch (getCurrentPhase(state)) {
+    case gamePhases.GAME_START:
+      return "Welcome to Hearts";
+    case gamePhases.PASSING:
+      const players = getPlayers(state);
+      const passDirection = getPassDirection(state);
+      return "Pass 3 cards to " + players[(3 + passDirection) % players.length].name;
+    case gamePhases.PLAYING:
+      const currentPlayer = getCurrentPlayer(state);
+      return "Waiting for " + currentPlayer.name;
+    default:
+      return " ";
+  }
+}
 
 // Player selectors
 export const getPlayers = state => fromHeartsPlayers.getPlayers(state.players);

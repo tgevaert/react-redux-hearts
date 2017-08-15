@@ -1,39 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { HeartsPlayers } from './HeartsPlayers';
+import HeartsPlayer from './HeartsPlayer';
 import CurrentTrick from './CurrentTrick';
-import { PlayerHand } from './PlayerHand';
+import Toast from './Toast';
 import { getPlayers } from '../reducers';
 
 const HeartsGamePresentation = ({ players }) => {
-  let playerComponents = [];
-  if (players.length < 4) {
-    playerComponents = [<br />, <br />, <br />, <br />];
-  } else {
-    playerComponents = players.map(player => <PlayerHand player={player} />);
-  }
-
   return (
     <div className="game-table">
-      <div className="north-player">
-        {playerComponents[1]}
-      </div>
+      <HeartsPlayer player={players[1]} position={"north"} />
       <div className="row-flex">
-        <div className="west-player">
-          {playerComponents[0]}
-        </div>
+        <HeartsPlayer player={players[0]} position={"west"} />
         <div className="game-board">
           <div className="viewport">
             <CurrentTrick />
           </div>
         </div>
-        <div className="east-player">
-          {playerComponents[2]}
-        </div>
+        <HeartsPlayer player={players[2]} position={"east"} />
       </div>
-      <div className="south-player">
-        {playerComponents[3]}
-      </div>
+      <Toast />
+      <HeartsPlayer player={players[3]} position={"south"} />
     </div>
   );
 };

@@ -19,7 +19,6 @@ import {
   isGameComplete,
   isReadyToPass,
   getPassDirection,
-  getRoundNumber,
   getSelectedCards,
   getCurrentPhase
 } from '../reducers';
@@ -182,9 +181,9 @@ export const gameTick = () => {
         case gamePhases.GAME_START:
           const playerIDs = getPlayers(state);
           if (playerIDs.length === 0) {
+            dispatch(addPlayer('Alice', 'AI'));
             dispatch(addPlayer('Bob', 'AI'));
-            dispatch(addPlayer('Doug', 'AI'));
-            dispatch(addPlayer('Bill', 'AI'));
+            dispatch(addPlayer('Carol', 'AI'));
             dispatch(addPlayer('You', 'Human'));
           }
           resolve(dispatch(fromPhases.startRound()));

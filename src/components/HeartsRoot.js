@@ -2,6 +2,7 @@ import React from 'react';
 import HeartsGame from './HeartsGame';
 import { Score } from './Score';
 import GameOver from './GameOver';
+import ScoreGraph from './ScoreGraph';
 import { DealButton } from './DealButton';
 
 const GameTitle = ({ title }) => {
@@ -13,6 +14,10 @@ const GameTitle = ({ title }) => {
     </div>
   );
 };
+//      <GameOver>
+//        <DealButton />
+//        <Score />
+//      </GameOver>
 
 const HeartsRoot = () => {
   return (
@@ -23,10 +28,7 @@ const HeartsRoot = () => {
           <a href="http://github.com/tgevaert/react-redux-hearts">Github</a>
         </div>
       </div>
-      <GameOver>
-        <DealButton />
-        <Score />
-      </GameOver>
+      <ScoreGraph />
       <HeartsGame />
     </div>
   );
