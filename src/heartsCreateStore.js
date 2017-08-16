@@ -8,8 +8,7 @@ const heartsCreateStore = () => {
   const cachedState = loadState();
   let store = null;
   if (process.env.NODE_ENV === 'production') {
-    //    store = createStore(heartsReducer, cachedState, applyMiddleware(...middlewares));
-    store = createStore(heartsReducer, applyMiddleware(...middlewares));
+    store = createStore(heartsReducer, cachedState, applyMiddleware(...middlewares));
   } else {
     const HeartsDevTools = require('./components/heartsAppDevTools');
     store = createStore(

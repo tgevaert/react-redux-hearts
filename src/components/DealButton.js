@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { newGame } from '../actions';
+import HeartsButton from './HeartsButton';
 
 const DealButtonPresentation = ({ handleClick }) => {
-  return <button onClick={handleClick}>New Game</button>;
+  return <HeartsButton onClick={handleClick}>New Game</HeartsButton>;
 };
 
-export const DealButton = connect(null, { handleClick: newGame })(
-  DealButtonPresentation
-);
+export default connect(null, { handleClick: newGame })(DealButtonPresentation);

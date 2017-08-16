@@ -3,7 +3,8 @@ import HeartsGame from './HeartsGame';
 import { Score } from './Score';
 import GameOver from './GameOver';
 import ScoreGraph from './ScoreGraph';
-import { DealButton } from './DealButton';
+import NewGame from './DealButton';
+import SourceButton from './SourceButton';
 
 const GameTitle = ({ title }) => {
   return (
@@ -24,8 +25,9 @@ const HeartsRoot = () => {
     <div className="heartsRootContainer">
       <div className="nav">
         <GameTitle title="Hearts" />
+        <NewGame />
         <div className="nav-right">
-          <a href="http://github.com/tgevaert/react-redux-hearts">Github</a>
+          <SourceButton />
         </div>
       </div>
       <ScoreGraph />
