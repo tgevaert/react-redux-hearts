@@ -19,8 +19,8 @@ const GraphLine = ({size}) => {
 };
 
 const ScoreGraphPresentation = ({playerNames, scores}) => {
-  const graphRowLabels = playerNames.map((playerName) => <GraphRowLabel label={playerName} />);
-  const graphLines = scores.map((score) => <GraphLine size={score} />);
+  const graphRowLabels = playerNames.map((playerName, i) => <GraphRowLabel key={i} label={playerName} />);
+  const graphLines = scores.map((score, i) => <GraphLine key={i} size={score} />);
   return (
         <div className={"graph"}>
           <div className={"labels"}>

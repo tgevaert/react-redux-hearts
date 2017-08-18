@@ -21,9 +21,9 @@ const GameTitle = ({ title }) => {
 const HeartsRootPresentation = ({isGameOver}) => {
   let viewComponents = [];
   if (!isGameOver) {
-    viewComponents = [<ScoreGraph />, <HeartsGame />]
+    viewComponents = [<ScoreGraph key="graph" />, <HeartsGame key="game" />]
   } else {
-    viewComponents = [<GameOver />];
+    viewComponents = [<GameOver key="gameover" />];
   }
 
   return (
