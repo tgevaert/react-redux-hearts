@@ -124,6 +124,8 @@ export const getToast = (state) => {
     case gamePhases.PLAYING:
       const currentPlayer = getCurrentPlayer(state);
       return "Waiting for " + currentPlayer.name;
+    case gamePhases.GAME_END:
+      return "GAME OVER!";
     default:
       return " ";
   }

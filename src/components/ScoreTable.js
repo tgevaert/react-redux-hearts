@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getPlayers, getScores } from '../reducers';
 
-const ScoreTable = ({ players, scores }) => {
+const ScoreTablePresentation = ({ players, scores }) => {
   const sum = [...players].fill(0);
   for (let score of scores) {
     for (let s = 0; s < score.length; s++) {
@@ -29,7 +29,7 @@ const ScoreTable = ({ players, scores }) => {
   });
 
   return (
-    <table>
+    <table className={"score-table"}>
       <thead>
         <tr>
           {tableHeading}
@@ -56,4 +56,4 @@ const mapStateToProps = state => ({
   scores: getScores(state)
 });
 
-export const Score = connect(mapStateToProps)(ScoreTable);
+export default connect(mapStateToProps)(ScoreTablePresentation);

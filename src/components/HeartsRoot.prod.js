@@ -5,7 +5,9 @@ import HeartsRoot from './HeartsRoot';
 const HeartsApp = ({ store }) => {
   return (
     <Provider store={store}>
-      <HeartsRoot />
+      <div className="heartsRoot">
+        <HeartsRoot />
+      </div>
     </Provider>
   );
 };

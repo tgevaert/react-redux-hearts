@@ -1,25 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { gamePhases, getCurrentPhase } from '../reducers';
+import Toast from './Toast';
+import ScoreTable from './ScoreTable';
 
-const GameOverPresentation = ({ gameOverClass, children }) => {
+const GameOverPresentation = () => {
   return (
-    <div className={gameOverClass}>
-      <div>
-        {children}
+    <div className={"game-over slide-in-south"}>
+      <div className={"game-over__row"}>
+        <Toast />
+      </div>
+      <div className={"game-over__row"}>
+        <ScoreTable />
       </div>
     </div>
   );
 };
 
-const mapStateToProps = state => {
-  const gameOverClass =
-    'game-over ' + (getCurrentPhase(state) === gamePhases.GAME_END);
-  return {
-    gameOverClass: gameOverClass
-  };
-};
-
-const GameOver = connect(mapStateToProps)(GameOverPresentation);
-
-export default GameOver;
+export default GameOverPresentation;

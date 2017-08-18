@@ -18,16 +18,21 @@
   100% { transform: translate(0px, 100%) }
 }
 
-html, body, #root, .heartsRoot, .heartsRootContainer {
+html, body, #root, .heartsRoot, .heartsGameContainer {
   height: 100%;
   margin: 0px;
   font-family: sans-serif;
 }
 
+.heartsModalContainer {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  top: 90%;
+  left: 90%;
+}
+
 body {
-  background-image: url("../card_hand.svg");
-  background-size: 100%;
-  background-repeat: no-repeat;
   background-color: #212121;
 }
 
@@ -50,7 +55,7 @@ body {
   filter: color(#E0E0E0);
 }
 
-.heartsRootContainer {
+.heartsGameContainer {
   display: flex;
   flex-direction: column;
 }
@@ -76,9 +81,15 @@ body {
   margin-left: auto;
 }
 
-.game-over {
-  flex: 0 0 auto;
-  background-color: grey;
+.content {
+  flex: 1 0 0%;
+  display: flex;
+  flex-direction: column;
+  background-image: url("../card_hand.svg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .graph {
@@ -361,23 +372,17 @@ td, th {
   left: -2.5em;
 }
 
-.game-over.true {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(10,10,10,0.3);
+.game-over {
+  flex: 1 0 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-.game-over.true div {
-  position: relative;
-  top: 25%;
-  height: 50%;
-  width: 290px;
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 10px;
-  transition: 2s;
+.game-over__row {
+  flex: 0 0 auto;
+  padding: 1em;
+  background-color: #616161;
+  color: #E0E0E0;
 }

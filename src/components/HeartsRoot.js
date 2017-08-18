@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import HeartsGame from './HeartsGame';
-import { Score } from './Score';
-import GameOver from './GameOver';
 import ScoreGraph from './ScoreGraph';
-import NewGame from './DealButton';
+import GameOver from './GameOver';
+import NewGame from './NewGameButton';
 import SourceButton from './SourceButton';
+import { gamePhases, getCurrentPhase } from '../reducers';
+
 
 const GameTitle = ({ title }) => {
   return (
@@ -15,14 +17,17 @@ const GameTitle = ({ title }) => {
     </div>
   );
 };
-//      <GameOver>
-//        <DealButton />
-//        <Score />
-//      </GameOver>
 
-const HeartsRoot = () => {
+const HeartsRootPresentation = ({isGameOver}) => {
+  let viewComponents = [];
+  if (!isGameOver) {
+    viewComponents = [<ScoreGraph />, <HeartsGame />]
+  } else {
+    viewComponents = [<GameOver />];
+  }
+
   return (
-    <div className="heartsRootContainer">
+    <div className="heartsGameContainer">
       <div className="nav">
         <GameTitle title="Hearts" />
         <NewGame />
@@ -30,10 +35,13 @@ const HeartsRoot = () => {
           <SourceButton />
         </div>
       </div>
-      <ScoreGraph />
-      <HeartsGame />
+      <div className="content">
+        { viewComponents }
+      </div>
     </div>
   );
 };
 
-export default HeartsRoot;
+const mapStateToProps = (state) => ({ isGameOver: (getCurrentPhase(state) === gamePhases.GAME_END) });
+
+export default connect(mapStateToProps)(HeartsRootPresentation);
