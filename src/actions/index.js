@@ -156,7 +156,9 @@ export const playOrToggleCard = (playerID, card) => {
       }
       resolve(
         dispatch(action(playerID, card)).then(resolved => {
-          console.log(resolved);
+          if (process.env.NODE_ENV !== 'production') {
+            console.log(resolved);
+          }
           return dispatch(gameTick());
         }, console.log)
       );
@@ -174,7 +176,9 @@ export const newGame = () => {
 
 export const gameTick = () => {
   return (dispatch, getState) => {
-    console.log('Game Tick');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Game Tick');
+    }
     const state = getState();
     let nextTick = new Promise((resolve, reject) => {
       switch (getCurrentPhase(state)) {
@@ -263,7 +267,9 @@ export const gameTick = () => {
       }
     });
     return nextTick.then(resolved => {
-      console.log(resolved);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(resolved);
+      }
       return dispatch(gameTick());
     }, console.log);
   };

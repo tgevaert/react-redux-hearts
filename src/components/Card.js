@@ -1,12 +1,15 @@
 import React from 'react';
 import { constants as heartsConstants } from '../heartsRules';
 
-const Card = ({ card, onClickHandler, direction, toggled = false }) => {
+const Card = ({ card, onClickHandler, direction, overturned = false, toggled = false }) => {
   const { value, suit } = card;
   const className =
     'card' +
     (direction !== undefined ? ' ' + direction : '') +
-    (toggled ? ' toggled' : '');
+    (toggled ? ' toggled' : '') +
+    (overturned? ' overturned' : '');
+
+  const text = overturned ? '' : value + ' ' + heartsConstants.cardSuits[suit].symbol;
 
   return (
     <div
@@ -14,7 +17,7 @@ const Card = ({ card, onClickHandler, direction, toggled = false }) => {
       onClick={onClickHandler}
       style={{ color: heartsConstants.cardSuits[suit].colour }}
     >
-      {value} {heartsConstants.cardSuits[suit].symbol}
+      {text}
     </div>
   );
 };

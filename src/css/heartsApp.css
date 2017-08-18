@@ -235,38 +235,22 @@ td, th {
   box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
 }
 
+.card.overturned {
+  background-color: #d50000;
+}
+
 .player.south .card, .player.north .card {
   margin-left: -0.1em;
   padding-left: 0.1em;
 }
 
-.player.west .card {
-  font-size: 2em;
-  font-family: monospace;
-  cursor: pointer;
-  text-align: center;
+.player.west .card, .player.east .card {
   direction: rtl;
   display: block;
   height: 1.8em;
   width: 2.929em;
   border: 1px solid black;
   border-radius: 5px 10px;
-  background: white;
-  margin-top: -0.1em;
-  padding-top: 0.1em;
-}
-
-.player.east .card {
-  font-size: 2em;
-  font-family: monospace;
-  cursor: pointer;
-  text-align: center;
-  display: block;
-  height: 1.8em;
-  width: 2.929em;
-  border: 1px solid black;
-  border-radius: 5px 10px;
-  background: white;
   margin-top: -0.1em;
   padding-top: 0.1em;
 }

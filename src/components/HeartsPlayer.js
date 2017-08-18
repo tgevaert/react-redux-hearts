@@ -1,7 +1,7 @@
 import React from 'react';
 import { PlayerHand } from './PlayerHand';
 
-const HeartsPlayer = ({player, position}) => {
+const HeartsPlayer = ({player, position, cardsHidden}) => {
   if (player === undefined) {
     return (
           <div>"Waiting for player..."</div>
@@ -11,7 +11,7 @@ const HeartsPlayer = ({player, position}) => {
   return (
       <div className={playerClass}>
         <div className={"name"}>{player.name}</div>
-        <PlayerHand player={player} />
+        <PlayerHand player={player} cardsHidden={cardsHidden} />
       </div>
   );
 }

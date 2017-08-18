@@ -8,15 +8,15 @@ import { getPlayers } from '../reducers';
 const HeartsGamePresentation = ({ players }) => {
   return (
     <div className="game-table">
-      <HeartsPlayer player={players[1]} position={"north"} />
+      <HeartsPlayer player={players[1]} position={"north"} cardsHidden={true} />
       <div className="row-flex">
-        <HeartsPlayer player={players[0]} position={"west"} />
+        <HeartsPlayer player={players[0]} position={"west"} cardsHidden={true} />
         <div className="game-board">
           <div className="viewport">
             <CurrentTrick />
           </div>
         </div>
-        <HeartsPlayer player={players[2]} position={"east"} />
+        <HeartsPlayer player={players[2]} position={"east"} cardsHidden={true} />
       </div>
       <Toast />
       <HeartsPlayer player={players[3]} position={"south"} />
