@@ -246,7 +246,7 @@ td, th {
   box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
 }
 
-.card.overturned {
+.card--overturned {
   background-color: #d50000;
 }
 
@@ -266,19 +266,19 @@ td, th {
   padding-top: 0.1em;
 }
 
-.player.west .card:hover, .player.west .card.toggled {
+.player.west .card:hover, .player.west .card--toggled {
   transform: translate(0.25em, 0);
 }
 
-.player.south .card:hover, .player.south .card.toggled {
+.player.south .card:hover, .player.south .card--toggled {
   transform: translate(0, -0.25em);
 }
 
-.player.east .card:hover, .player.east .card.toggled {
+.player.east .card:hover, .player.east .card--toggled {
   transform: translate(-0.25em, 0);
 }
 
-.player.north .card:hover, .player.north .card.toggled {
+.player.north .card:hover, .player.north .card--toggled {
   transform: translate(0, 0.25em);
 }
 
@@ -290,7 +290,7 @@ td, th {
   transition: 0.1s;
 }
 
-.hand .card.toggled {
+.hand .card--toggled {
   background: rgb(235, 235, 235);
 }
 

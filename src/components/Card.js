@@ -1,15 +1,28 @@
 import React from 'react';
 import { constants as heartsConstants } from '../heartsRules';
 
+const CardValue = ({ value }) => (
+    <div className="card__value">
+      {value}
+    </div>
+);
+
+const CardSymbol = ({ symbol }) => (
+    <div className="card__symbol">
+      {symbol}
+    </div>
+);
+
+
 const Card = ({ card, onClickHandler, direction, overturned = false, toggled = false }) => {
   const { value, suit } = card;
   const className =
     'card' +
     (direction !== undefined ? ' ' + direction : '') +
-    (toggled ? ' toggled' : '') +
-    (overturned? ' overturned' : '');
+    (toggled ? ' card--toggled' : '') +
+    (overturned? ' card--overturned' : '');
 
-  const text = overturned ? '' : value + ' ' + heartsConstants.cardSuits[suit].symbol;
+  const contents = overturned ? [] : [<CardValue value={value} />, <CardSymbol symbol={heartsConstants.cardSuits[suit].symbol} />];
 
   return (
     <div
@@ -17,7 +30,7 @@ const Card = ({ card, onClickHandler, direction, overturned = false, toggled = f
       onClick={onClickHandler}
       style={{ color: heartsConstants.cardSuits[suit].colour }}
     >
-      {text}
+      {contents}
     </div>
   );
 };
