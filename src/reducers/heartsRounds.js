@@ -54,7 +54,7 @@ export const getScores = (state, playerIDs) => {
     // Check if someone shot the moon.
     for (let i = 0; i < roundScores.length; i++) {
       if (roundScores[i] === 26) {
-        roundScores[i] -= 26;
+        roundScores[i] -= 52; // Erase current score, and go negative.
       }
     }
     scores.push(roundScores);

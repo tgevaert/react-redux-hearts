@@ -7,8 +7,8 @@ const GraphRowLabel = ({label}) => (<div className={"graph label"}>{label}</div>
 const GraphLine = ({size}) => {
   const colors = ["#388e3c", "#ffd600", "#e65100", "#d50000", "#d50000"];
   const barStyle = { 
-    flexBasis: Math.min(size, 100)+"%",
-    backgroundColor: colors[Math.floor(size / 25)],
+    flexBasis: Math.max(Math.min(size, 100), 0) + "%",
+    backgroundColor: colors[Math.max(Math.floor(size / 25), 0)],
   };
   return (
       <div className={"graph row"}>

@@ -22,7 +22,7 @@ const Card = ({ card, onClickHandler, direction, overturned = false, toggled = f
     (toggled ? ' card--toggled' : '') +
     (overturned? ' card--overturned' : '');
 
-  const contents = overturned ? [] : [<CardValue value={value} />, <CardSymbol symbol={heartsConstants.cardSuits[suit].symbol} />];
+  const contents = overturned ? [] : [<CardValue key="value" value={value} />, <CardSymbol key="symbol" symbol={heartsConstants.cardSuits[suit].symbol} />];
 
   return (
     <div
