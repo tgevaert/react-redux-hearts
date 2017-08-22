@@ -24,14 +24,6 @@ html, body, #root, .heartsRoot, .heartsGameContainer {
   font-family: sans-serif;
 }
 
-.heartsModalContainer {
-  position: fixed;
-  width: 100px;
-  height: 100px;
-  top: 90%;
-  left: 90%;
-}
-
 body {
   background-color: #212121;
 }
@@ -219,12 +211,6 @@ body {
   .player.east .hand, .player.west .hand, .player.north .hand{
     display: flex;
   }
-
-  .game-board {
-  }
-
-  .viewport {
-  }
 }
 
 
@@ -351,24 +337,19 @@ td, th {
   animation: slidesouth 0.2s ease-out reverse;
 }
 
-.trick .card.north {
+.trick .card--north {
   top: -2.5em;
 }
 
-.trick .card.north.unplayed {
-  top: -2.5em;
-  background-color: #ccc;
-}
-
-.trick .card.east {
+.trick .card--east {
   right: -2.5em;
 }
 
-.trick .card.south {
+.trick .card--south {
   bottom: -2.5em;
 }
 
-.trick .card.west {
+.trick .card--west {
   left: -2.5em;
 }
 

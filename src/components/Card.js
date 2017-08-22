@@ -18,7 +18,7 @@ const Card = ({ card, onClickHandler, direction, overturned = false, toggled = f
   const { value, suit } = card;
   const className =
     'card' +
-    (direction !== undefined ? ' ' + direction : '') +
+    (direction !== undefined ? ' card--' + direction : '') +
     (toggled ? ' card--toggled' : '') +
     (overturned? ' card--overturned' : '');
 
