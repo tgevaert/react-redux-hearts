@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import heartsPlayers, * as fromHeartsPlayers from './heartsPlayers';
 import heartsRounds, * as fromHeartsRounds from './heartsRounds';
 import heartsPhases, * as fromHeartsPhases from './heartsPhases';
+import heartsUI, * as fromHeartsUI from './heartsUI';
 import * as fromHeartsTricks from './heartsTricks';
 
 export const getCurrentPlayer = state => {
@@ -40,7 +41,8 @@ export const getCurrentPlayerID = state => {
 const heartsGame = combineReducers({
   players: heartsPlayers,
   rounds: heartsRounds,
-  phase: heartsPhases
+  phase: heartsPhases,
+  ui: heartsUI
 });
 
 export default heartsGame;
@@ -137,6 +139,8 @@ export const getPlayerIDs = state =>
   fromHeartsPlayers.getPlayerIDs(state.players);
 export const getPlayerByID = (state, playerID) =>
   fromHeartsPlayers.getPlayerByID(state.players, playerID);
+export const getPlayerByName = (state, playerName) =>
+  fromHeartsPlayers.getPlayerByName(state.players, playerName);
 export const getPlayerHand = (state, playerID) =>
   fromHeartsPlayers.getPlayerHand(state.players, playerID);
 export const getSelectedCards = (state, playerID) =>
@@ -176,3 +180,7 @@ export const isCurrentPhase = (state, phase) =>
 export const getCurrentPhase = state =>
   fromHeartsPhases.getCurrentPhase(state.phase);
 export const gamePhases = fromHeartsPhases.gamePhases;
+
+// UI selectors
+export const getCurrentPOV = (state) => 
+  fromHeartsUI.getCurrentPOV(state.ui);

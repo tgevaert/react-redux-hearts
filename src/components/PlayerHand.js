@@ -22,7 +22,7 @@ const PlayerHandPresentation = ({
   const cardElements = cards.map(card =>
     <Card
       key={card.value + card.suit}
-      onClickHandler={() => handleClick(player.id, card)}
+      onClickHandler={cardsHidden ? null : () => handleClick(player.id, card)}
       card={card}
       toggled={isToggled(selectedCards, card)}
       overturned={cardsHidden}
@@ -39,9 +39,9 @@ const mapStateToProps = (state, { player, cardsHidden }) => {
   const playerHand = getPlayerHand(state, player.id);
   const selectedCards = getSelectedCards(state, player.id);
 
-  return { player, cards: playerHand, selectedCards: selectedCards, cardsHidden };
+  return { player, cards: playerHand, selectedCards, cardsHidden };
 };
 
-export const PlayerHand = connect(mapStateToProps, {
+export default connect(mapStateToProps, {
   handleClick: playOrToggleCard
 })(PlayerHandPresentation);

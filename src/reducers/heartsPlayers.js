@@ -157,15 +157,23 @@ const heartsPlayers = (state = [], action) => {
 };
 
 // Selectors
-
-export const getPlayerByID = (state, playerID) => {
+//
+const findElement = (state, matchFn) => {
   if (state === undefined) {
     throw new Error('State is not defined..');
   }
   if (state.find === undefined) {
     throw new Error('State is not an array..? ' + JSON.stringify(state));
   }
-  return state.find(player => player.id === playerID);
+  return state.find(matchFn);
+}
+
+export const getPlayerByID = (state, playerID) => {
+  return findElement(state, player => player.id === playerID);
+};
+
+export const getPlayerByName = (state, playerName) => {
+  return findElement(state, player => player.name === playerName);
 };
 
 export default heartsPlayers;

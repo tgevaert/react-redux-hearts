@@ -1,16 +1,23 @@
 import React from 'react';
-import { PlayerHand } from './PlayerHand';
+import PlayerHand from './PlayerHand';
 
-const HeartsPlayer = ({player, position, cardsHidden}) => {
+const HeartsPlayer = ({player, position, cardsHidden = false}) => {
   if (player === undefined) {
     return (
           <div>"Waiting for player..."</div>
     );
   }
-  const playerClass = "player " + position;
+  const playerClass = "player";
+  const playerClassModifier = playerClass + "--" + position;
+  const playerClasses = [playerClass, playerClassModifier].join(" ");
+
+  
+  const playerNameClass = playerClass + "__name";
+  const playerNameClasses = playerNameClass + (cardsHidden ? "" : ( " " + playerNameClass + "--disabled"));
+
   return (
-      <div className={playerClass}>
-        <div className={"name"}>{player.name}</div>
+      <div className={playerClasses}>
+        <div className={playerNameClasses}>{player.name}</div>
         <PlayerHand player={player} cardsHidden={cardsHidden} />
       </div>
   );

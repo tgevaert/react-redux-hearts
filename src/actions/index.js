@@ -2,9 +2,11 @@ import * as fromPlayers from './players';
 import * as fromTricks from './tricks';
 import * as fromRounds from './rounds';
 import * as fromPhases from './phases';
+import * as fromUI from './ui';
 import {
   getPlayers,
   getPlayerIDs,
+  getPlayerByName,
   getCurrentPlayerID,
   getCurrentPlayer,
   playerHandContainsCard,
@@ -24,8 +26,16 @@ import {
 } from '../reducers';
 import aiPlayChoice, { aiPassChoice } from '../ai/random';
 
-export const addPlayer = (player, playerType = 'Human') =>
-  fromPlayers.addPlayer(player, playerType);
+export const addPlayer = (playerName, playerType = 'Human', setPOV = false) => {
+  return (dispatch, getState) => {
+    dispatch(fromPlayers.addPlayer(playerName, playerType));
+    if (setPOV) {
+      const state = getState();
+      const player = getPlayerByName(state, playerName)
+      dispatch(fromUI.setPOV(player.id));
+    }
+  }
+}
 
 const MOVE_DELAY = 500; // ms
 
@@ -188,7 +198,7 @@ export const gameTick = () => {
             dispatch(addPlayer('Alice', 'AI'));
             dispatch(addPlayer('Bob', 'AI'));
             dispatch(addPlayer('Carol', 'AI'));
-            dispatch(addPlayer('You', 'Human'));
+            dispatch(addPlayer('You', 'Human', true));
           }
           resolve(dispatch(fromPhases.startRound()));
           break;

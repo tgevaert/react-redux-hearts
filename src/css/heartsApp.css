@@ -126,9 +126,11 @@ body {
   border-radius: 0.3em;
 }
 
-/*.game-table, .player.north, .player.east, .player.south, .player.west, .column-flex, .game-board, .trick {
+/*
+.game-table, .player--north, .player--east, .player--south, .player--west, .column-flex, .game-board, .trick {
   border: 1px solid black;
-}*/
+}
+*/
 
 .row-flex {
   flex: 1 0 0px;
@@ -141,23 +143,23 @@ body {
 .player {
   text-align: center;
   color: #E0E0E0;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.player.west, .player.east {
+.player--west, .player--east {
   flex-direction: row;
   align-items: center;
 }
 
-.player .name {
+.player__name {
   flex: 0 0 auto;
 }
 
-.player.west .name, .player.north .name {
+.player--west .player__name, .player--north .player__name {
   order: 2;
 }
 
@@ -166,24 +168,30 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  font-family: monospace;
 }
 
 
-.player.west .hand, .player.north .hand {
+.player--west .hand, .player--north .hand {
   order: 1;
 }
 
-.player.west .hand, .player.east .hand {
+.player--west .hand, .player--east .hand {
   flex: 0 1 auto;
   flex-direction: column;
   flex-wrap: nowrap;
+  min-width: 5.858em;
 }
 
-.player.south .name {
+.player--north .hand, .player--south .hand {
+  min-height: 5.858em;
+}
+
+.player__name--disabled {
   display: none;
 }
 
-.player.east .hand, .player.west .hand, .player.north .hand {
+.player--east .hand, .player--west .hand, .player--north .hand {
   display: none;
 }
 
@@ -208,7 +216,7 @@ body {
 }
 
 @media (min-width: 768px) and (min-height: 768px) {
-  .player.east .hand, .player.west .hand, .player.north .hand{
+  .player--east .hand, .player--west .hand, .player--north .hand{
     display: flex;
   }
 }
@@ -221,7 +229,7 @@ td, th {
 .card {
   font-size: 2em;
   font-family: monospace;
-  cursor: pointer;
+  cursor: default;
   text-align: center;
   display: inline-block;
   width: 1.8em;
@@ -236,12 +244,12 @@ td, th {
   background-color: #d50000;
 }
 
-.player.south .card, .player.north .card {
+.player--south .card, .player--north .card {
   margin-left: -0.1em;
   padding-left: 0.1em;
 }
 
-.player.west .card, .player.east .card {
+.player--west .card, .player--east .card {
   direction: rtl;
   display: block;
   height: 1.8em;
@@ -252,20 +260,24 @@ td, th {
   padding-top: 0.1em;
 }
 
-.player.west .card:hover, .player.west .card--toggled {
-  transform: translate(0.25em, 0);
-}
-
-.player.south .card:hover, .player.south .card--toggled {
+.player--south .card:hover, .player--south .card--toggled {
   transform: translate(0, -0.25em);
 }
 
-.player.east .card:hover, .player.east .card--toggled {
-  transform: translate(-0.25em, 0);
+.player--south .card {
+  cursor: pointer;
 }
 
-.player.north .card:hover, .player.north .card--toggled {
+.player--north .card--toggled {
   transform: translate(0, 0.25em);
+}
+
+.player--west .card--toggled {
+  transform: translate(0.25em, 0);
+}
+
+.player--east .card--toggled {
+  transform: translate(-0.25em, 0);
 }
 
 .hand {
@@ -276,7 +288,7 @@ td, th {
   transition: 0.1s;
 }
 
-.hand .card--toggled {
+.card--toggled {
   background: rgb(235, 235, 235);
 }
 

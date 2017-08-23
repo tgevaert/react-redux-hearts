@@ -10,26 +10,26 @@ import {
 export const addPlayer = (name, playerType = 'Human') => ({
   type: ADD_PLAYER,
   id: uuidV4(),
-  name: name,
-  playerType: playerType
+  name,
+  playerType
 });
 
 export const dealCard = (playerID, card) => ({
   type: DEAL_CARD,
-  playerID: playerID,
-  card: card
+  playerID,
+  card
 });
 
 export const playCard = (playerID, card) => ({
   type: PLAY_CARD,
-  playerID: playerID,
-  card: card
+  playerID,
+  card
 });
 
 export const toggleCard = (playerID, card) => ({
   type: TOGGLE_CARD,
-  playerID: playerID,
-  card: card
+  playerID,
+  card
 });
 
 export const passCards = (fromPlayerID, toPlayerID, cards) => ({
