@@ -1,8 +1,8 @@
-# react-redux-hearts
+# Hearts Progressive Web App
 
-React and Redux implementation of classic Hearts card game.
+This is a React + Redux implementation of the classic 4 player Hearts card game.  [Go play it!](https://hearts.yocto.ca).
 
-Bootstrapped using create-react-app.
+Bootstrapped using [create-react-app](https://github.com/facebookincubator/create-react-app).
 
 Written in ES6 using Babel and Webpack.
 
@@ -10,4 +10,4 @@ Reducer logic unit tests written for Jest.
 
 Single source of truth based on state representation of players, hands, tricks and rounds, with selectors used for calculated states.
 
-React Composition and Presentational components are separate for simple future UI updates.
+Aiming for a 100% score on the [Lighthouse Progressive Web App Audit](https://developers.google.com/web/tools/lighthouse/).
