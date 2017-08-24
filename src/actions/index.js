@@ -166,11 +166,9 @@ export const playOrToggleCard = (playerID, card) => {
       }
       resolve(
         dispatch(action(playerID, card)).then(resolved => {
-          if (process.env.NODE_ENV !== 'production') {
-            console.log(resolved);
-          }
+          debugPrint(resolved);
           return dispatch(gameTick());
-        }, console.log)
+        }, debugPrint)
       );
     });
     return movePromise;
@@ -184,11 +182,15 @@ export const newGame = () => {
   };
 };
 
+const debugPrint = (message) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(message);
+  }
+};
+
 export const gameTick = () => {
   return (dispatch, getState) => {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Game Tick');
-    }
+    debugPrint('Game Tick');
     const state = getState();
     let nextTick = new Promise((resolve, reject) => {
       switch (getCurrentPhase(state)) {
@@ -277,11 +279,9 @@ export const gameTick = () => {
       }
     });
     return nextTick.then(resolved => {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(resolved);
-      }
+      debugPrint(resolved);
       return dispatch(gameTick());
-    }, console.log);
+    }, debugPrint);
   };
 };
 
