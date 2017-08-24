@@ -122,7 +122,8 @@ export const getToast = (state) => {
     case gamePhases.PASSING:
       const players = getPlayers(state);
       const passDirection = getPassDirection(state);
-      return "Pass 3 cards to " + players[(3 + passDirection) % players.length].name;
+      const POVIndex = getPOVPlayerIndex(state);
+      return "Pass 3 cards to " + players[(POVIndex + passDirection) % players.length].name;
     case gamePhases.PLAYING:
       const currentPlayer = getCurrentPlayer(state);
       return "Waiting for " + currentPlayer.name;
@@ -131,7 +132,13 @@ export const getToast = (state) => {
     default:
       return " ";
   }
-}
+};
+
+export const getPOVPlayerIndex = state => {
+  const playerIDs = getPlayerIDs(state);
+  const POVPlayerID = getCurrentPOV(state);
+  return playerIDs.indexOf(POVPlayerID);
+};
 
 // Player selectors
 export const getPlayers = state => fromHeartsPlayers.getPlayers(state.players);

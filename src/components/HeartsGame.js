@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import HeartsPlayer from './HeartsPlayer';
 import CurrentTrick from './CurrentTrick';
 import Toast from './Toast';
-import { getPlayers, getCurrentPOV } from '../reducers';
+import { getPlayers, getPOVPlayerIndex } from '../reducers';
 
-const HeartsGamePresentation = ({ players, POV }) => {
-  const POVindex = players.findIndex(player => player.id === POV);
+const HeartsGamePresentation = ({ players, POVindex }) => {
   const pnum = players.length;
 
   return (
@@ -27,6 +26,6 @@ const HeartsGamePresentation = ({ players, POV }) => {
   );
 };
 
-export default connect(state => ({ players: getPlayers(state), POV: getCurrentPOV(state) }))(
+export default connect(state => ({ players: getPlayers(state), POVindex: getPOVPlayerIndex(state) }))(
   HeartsGamePresentation
 );

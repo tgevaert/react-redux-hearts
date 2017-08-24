@@ -3,7 +3,8 @@ import {
   getCurrentTrick,
   getPlayerIDs,
   isTrickComplete,
-  getCurrentWinnerID
+  getCurrentWinnerID,
+  getPOVPlayerIndex,
 } from '../reducers';
 import { Trick } from './Trick';
 
@@ -11,7 +12,8 @@ const CurrentTrick = connect(
   state => ({
     trick: getCurrentTrick(state),
     playerIDs: getPlayerIDs(state) || [],
-    winnerID: isTrickComplete(state) ? getCurrentWinnerID(state) : null
+    winnerID: isTrickComplete(state) ? getCurrentWinnerID(state) : null,
+    POVIndex: getPOVPlayerIndex(state)
   }),
   null
 )(Trick);

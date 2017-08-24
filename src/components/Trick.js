@@ -2,11 +2,12 @@ import React from 'react';
 import Card from './Card';
 import { Slide } from './Slide';
 
-export const Trick = ({ trick, playerIDs, winnerID }) => {
-  const directions = ['west', 'north', 'east', 'south'];
+export const Trick = ({ trick, playerIDs, winnerID, POVIndex }) => {
+  const directions = ['south', 'west', 'north', 'east'];
+  const pnum = playerIDs.length;
   const directionMap = {};
   for (let i = 0; i < playerIDs.length; i++) {
-    directionMap[playerIDs[i]] = directions[i];
+    directionMap[playerIDs[(POVIndex + i) % pnum]] = directions[i];
   }
   const animationDirection = winnerID !== null ? directionMap[winnerID] : '';
   const cards = trick.map(move =>
