@@ -7,7 +7,7 @@ const heartsCreateStore = () => {
   const middlewares = [thunk, browserCache];
   const cachedState = loadState();
   let store = null;
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || process.env.REACT_APP_WITHOUT_DEVTOOLS) {
     store = createStore(heartsReducer, cachedState, applyMiddleware(...middlewares));
   } else {
     const HeartsDevTools = require('./components/heartsAppDevTools');
