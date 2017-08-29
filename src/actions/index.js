@@ -24,7 +24,7 @@ import {
   getSelectedCards,
   getCurrentPhase
 } from '../reducers';
-import aiPlayChoice, { aiPassChoice } from '../ai/random';
+import aiPlayChoice, { aiPassChoice } from '../ai';
 
 export const addPlayer = (playerName, playerType = 'Human', setPOV = false) => {
   return (dispatch, getState) => {

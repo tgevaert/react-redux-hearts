@@ -1,43 +1,55 @@
 import {
-  getCurrentTrick,
   getPlayerHand,
+  getCurrentTrick,
   getCurrentTrickSuit,
-  getCurrentTrickValue,
+  getSelectedCards,
   playerHandContainsSuit,
   isHeartsBroken
 } from '../reducers';
-import { constants as heartsConstants } from '../heartsRules';
+import { selectCardToPlay } from './simpleReflex'
 
-const cardCost = card => {
-  // Cost of keeping a card
-  // Higher cost implies that the card is more likely to result in winning points
-  // Keeping a Q of Spades is bad.  Keeping an A of hearts is bad.  Keeping a 2 of Clubs is good.
-  return (
-    heartsConstants.cardValues[card.value].rank +
-    heartsConstants.pointValue(card)
-  );
+const getRandomElement = array => {
+  const max = array.length;
+  const ri = Math.floor(Math.random() * max);
+  return array[ri];
 };
 
-export const AIplayCard = (state, playerID) => {
-  const hand = getPlayerHand(state);
-  const trick = getCurrentTrick(state);
+const AIplayChoice = (state, playerID) => {
+  const hand = getPlayerHand(state, playerID);
   const suit = getCurrentTrickSuit(state);
+  const trick = getCurrentTrick(state);
+  const hasLead = suit === null;
   const followSuit = playerHandContainsSuit(state, playerID, suit);
+  const brokenHearts = isHeartsBroken(state);
 
-  let bestCard = null;
-  let lowestCost = 100000;
   let cardPool = [];
 
   if (followSuit) {
-    cardPool = hand.filter(card => {
-      return card.suit === suit;
-    });
+    cardPool = hand.filter(card => card.suit === suit);
+  } else if (hasLead && !brokenHearts) {
+    cardPool = hand.filter(card => card.suit !== 'H');
+    if (cardPool.length === 0) {
+      // Only hearts left in hand
+      cardPool = hand;
+    }
   } else {
     cardPool = hand;
   }
 
-  for (let card of cardPool) {
-  }
-
-  return bestCard;
+  //return getRandomElement(cardPool);
+  return selectCardToPlay(cardPool, trick);
 };
+
+export const aiPassChoice = (state, playerID) => {
+  const hand = getPlayerHand(state, playerID);
+  const selectedCards = getSelectedCards(state, playerID);
+  const cardPool = hand.filter(
+    card =>
+      selectedCards.findIndex(
+        sc => sc.suit === card.suit && sc.value === card.value
+      ) === -1
+  );
+  return getRandomElement(cardPool);
+};
+
+export default AIplayChoice;

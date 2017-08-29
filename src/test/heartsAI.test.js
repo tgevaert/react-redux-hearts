@@ -1,7 +1,7 @@
 import * as testConstants from './testConstants';
 import heartsReducer, * as fromHeartsReducer from '../reducers';
 import * as fromPlayerActions from '../actions/players';
-import AIplayRandomCard from '../ai/random';
+import AIplayChoice from '../ai';
 
 let state = undefined;
 state = heartsReducer(undefined, testConstants.addPlayerBob);
@@ -64,15 +64,15 @@ state = heartsReducer(
   fromPlayerActions.playCard(testConstants.playerBill.id, testConstants.card2C)
 );
 
-it('Plays a random card from a hand', () => {
+it('Plays a card from a hand', () => {
   // Either card is at least clubs
-  expect(AIplayRandomCard(state, testConstants.playerTed.id)).toMatchObject({
+  expect(AIplayChoice(state, testConstants.playerTed.id)).toMatchObject({
     suit: 'C'
   });
 });
 
 it('Folows suit', () => {
-  expect(AIplayRandomCard(state, testConstants.playerBill.id)).toEqual(
+  expect(AIplayChoice(state, testConstants.playerBill.id)).toEqual(
     testConstants.card4H
   );
 });
